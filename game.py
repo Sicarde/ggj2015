@@ -37,14 +37,14 @@ lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 
 class Proof():
     image = None
-    pos = Rect(400, 400, 40, 40)
+    pos = Rect(3 * 32, 3 * 32, 32, 32)
     isPrinted = True
     def __init__(self, name):
-        image = pygame.image.load(name).convert_alpha()
+        self.image = pygame.image.load(name).convert_alpha()
 
 class Player():
     color = "red"
-    pos = Rect(400, 400, 40, 40)
+    pos = Rect(5 * 32, 14 * 32, 32, 32)
     proof = None
     def takeProof(self, proof):
         proof.isPrinted = false
@@ -54,24 +54,46 @@ class Player():
         proof = None
 
 class inspectorPedro():
-    pos = Rect(20, 20, 40, 40)
-    direction = 3
-    #direction = { UP, DOWN, LEFT, RIGHT, NONE }
+    pos = Rect(20 * 32, 29 * 32, 32, 32)
+    direction = 0
+    #direction = { UP, DOWN, LEFT, RIGHT }
     def move(self, fenetre, players):
-        if (self.direction == 3 and self.pos.x < 40 * self.pos.height):
-            self.pos.x += 40
-        elif (self.direction == 2 and self.pos.x > 0):
-            self.pos.x -= 40
-        elif (self.direction == 1 and self.pos.y < 40 * self.pos.width):
-            self.pos.y += 40
-        elif (self.direction == 0 and self.pos.y > 0):
-            self.pos.y -= 40
-        else:
-            self.direction = 5
+        if (self.direction == 0):
+            if (lala[self.pos.y / 32 - 1][self.pos.x / 32] == 1):
+                print(self.pos.y/32)
+                print(self.pos.x/32)
+                print(lala[self.pos.y / 32 - 1][self.pos.x / 32])
+                self.changeDirection()
+            else:
+                self.pos.y -= 32
+        elif (self.direction == 1):
+            if (lala[self.pos.y / 32 + 1][self.pos.x / 32] == 1):
+                self.changeDirection()
+            else:
+                self.pos.y += 32
+        elif (self.direction == 2):
+            if (lala[self.pos.y / 32][self.pos.x / 32 - 1] == 1):
+                self.changeDirection()
+            else:
+                self.pos.x -= 32
+        elif (self.direction == 0):
+            if (lala[self.pos.y / 32][self.pos.x / 32 + 1] == 1):
+                self.changeDirection()
+            else:
+                self.pos.x += 32
         for player in players:
-            if (player.pos.x - self.pos.x > -2 and player.pos.x - self.pos.x < 2 and random.randint(0, 1) == 1):
+            if (player.pos.x / 32 - self.pos.x / 32 > -2 and player.pos.x / 32 - self.pos.x / 32 < 2 and random.randint(0, 1) == 1):
                 lookFor(player)
         fenetre.blit(block1bas, self.pos)
+    def changeDirection(self):
+        if (self.direction == 0):
+            self.direction = 1
+        elif (self.direction == 1):
+            self.direction = 0
+        elif (self.direction == 2):
+            self.direction = 3
+        elif (self.direction == 3):
+            self.direction = 2
     def lookFor(self, player):
         if (player.proof != None):
             #tutulu UNE PREUVE HAHAHAHA LE JEU
@@ -84,35 +106,20 @@ fenetre = pygame.display.set_mode(taille)
 
 block1bas = pygame.image.load("block1bas.png").convert_alpha()
 
-position_block1bas = block1bas.get_rect()
-position_block1bas.x = 200
-position_block1bas.y = 200
-
-position_block1bas2 = block1bas.get_rect()
-position_block1bas2.x = 300
-position_block1bas2.y = 300
-
-position_block1bas3 = block1bas.get_rect()
-position_block1bas3.x = 400
-position_block1bas3.y = 400
-
-position_block1bas4 = block1bas.get_rect()
-position_block1bas4.x = 500
-position_block1bas4.y = 500
-
 continuer = 1
 inspector = inspectorPedro()
 players = [Player()]
 proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
 while continuer:
     for event in pygame.event.get():
-        if event.type == QUIT:
+        if (event.type == QUIT):
             continuer = 0
     fenetre.fill((0, 0, 0))
     inspector.move(fenetre, players)
-    fenetre.blit(block1bas, position_block1bas)
-    fenetre.blit(block1bas, position_block1bas2)
-    fenetre.blit(block1bas, position_block1bas3)
+    for player in players:
+        fenetre.blit(block1bas, player.pos)
+    for proof in proofs:
+        fenetre.blit(proof.image, proof.pos)
     time.sleep(1)
 
     pygame.display.flip()
