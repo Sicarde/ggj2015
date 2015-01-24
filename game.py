@@ -134,6 +134,10 @@ def testlist(nodelist):
             return 1
     return 0
 
+def clean(nlist):
+    for n in nlist:
+        n.weigth = 50
+
 class inspectorPedro():
     direction = None
     #direction = { UP, DOWN, LEFT, RIGHT ]
@@ -149,16 +153,15 @@ class inspectorPedro():
     def move(self, fenetre, players):
         if ((round(self.pos.x) == round(self.direction.pos.x)) and (round(self.pos.y) == round(self.direction.pos.y))):
             self.node = self.direction
-            if (self.node.weigth != 0):
-                if (testlist(self.node.nodeList)):
-                    self.direction = min(self.node.nodeList)
-                else:
-                    self.direction = random.choice(self.node.nodeList)
+            self.direction = min(self.node.nodeList)
         else:
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
             vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
             self.pos.x -= vecteur.x / 10
             self.pos.y -= vecteur.y / 10
+        if (self.node.weigth == 0):
+            clean(n)
+            onVaMangerDesChips(n[random.randint(0, 51)], 0)
         fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
@@ -260,7 +263,7 @@ n.append(Node(19.0, 16.0, [n[7]]))
 
 inspector = inspectorPedro(n[0])
 
-#onVaMangerDesChips(n[51], 0)
+onVaMangerDesChips(n[51], 0)
 
 pygame.font.init()
     
@@ -340,7 +343,7 @@ while continuer:
         player.draw(fenetre)
     for proof in proofs:
         fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
-    #time.sleep(0.25)
+    time.sleep(0.01)
 #    for node in n:
 #        basicfont = pygame.font.SysFont(None, 48)
 #        text = basicfont.render(unicode(node.weigth), True, (255, 0, 0), (255, 255, 255))
