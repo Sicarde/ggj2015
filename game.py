@@ -1,6 +1,7 @@
 #! /usr/bin/python2                                                                                                                                                                          # -*- coding: utf-8 -*-
 
 import pygame
+import sys
 import time
 from pygame.locals import *
 
@@ -65,6 +66,9 @@ class Player():
         proof = None
 
 class Node():
+    weigth = 50
+    def __cmp__ (self, other):
+        return cmp(self.weigth, other.weigth)
     def __init__(self, x, y, nodeList):
         self.pos = Position(x, y)
         self.nodeList = nodeList
@@ -73,6 +77,13 @@ class Node():
     def append(self, node):
         self.nodeList.append(node)
         node.nodeList.append(self)
+
+def onVaMangerDesChips(node, weigth):
+    node.weigth = weigth
+    for n in node.nodeList:
+        if (weigth < n.weigth):
+            onVaMangerDesChips(n, weigth + 1)
+    
         
 class inspectorPedro():
     direction = 0
@@ -81,9 +92,13 @@ class inspectorPedro():
     goToRoom = 0
     room = 0
     #room = { IDLE, GET OUT, RED, GREEN, ORANGE, PURP ] (7931)
-    def __init__(self):
-        self.pos = Position(21.0, 2.0)
+    def __init__(self, node):
+        self.node = node
+        self.pos = node.pos
     def move(self, fenetre, players):
+        if (self.node.weigth != 0):
+            self.node = min(self.node.nodeList)
+            self.pos = self.node.pos
         fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
@@ -112,7 +127,6 @@ fenetre = pygame.display.set_mode(taille)
 block1bas = pygame.image.load("block1bas.png").convert_alpha()
 
 continuer = 1
-inspector = inspectorPedro()
 players = [Player()]
 proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
 background = pygame.image.load("map.png").convert_alpha()
@@ -121,10 +135,10 @@ menu = pygame.image.load("super_menu.png").convert()
 new_rec = pygame.image.load("hand.png").convert_alpha()
 merci = pygame.image.load("OPTION.png").convert()
 
-n = [Node(21.0, 2.0, [])]
-n.append(Node(21.0, 9.0, [n[0]]))
-n.append(Node(21.0, 11.0, [n[1]]))
-n.append(Node(14.0, 11.0, [n[2]]))
+n = [Node(19.0, 2.0, [])]
+n.append(Node(19.0, 9.0, [n[0]]))
+n.append(Node(19.0, 11.0, [n[1]]))
+n.append(Node(12.0, 11.0, [n[2]]))
 n.append(Node(10.0, 15.0, [n[3]]))
 
 n.append(Node(12.0, 18.0, [n[4], n[3]]))
@@ -135,7 +149,7 @@ n.append(Node(24.0, 15.0, [n[8], n[7], n[2]]))
 
 n.append(Node(27.0, 11.0, [n[9], n[2]]))
 n.append(Node(29.0, 15.0, [n[10], n[9], n[8]]))
-n.append(Node(7.0, 9.0, [n[3]]))
+n.append(Node(12.0, 9.0, [n[3]]))
 n.append(Node(10.0, 7.0, [n[12]]))
 n.append(Node(11.0, 3.0, [n[13]]))
 
@@ -183,6 +197,13 @@ n.append(Node(10.0, 22.0, [n[48], n[46], n[45]]))
 
 n.append(Node(12.0, 20.0, [n[45], n[49], n[5]]))
 
+
+inspector = inspectorPedro(n[0])
+
+onVaMangerDesChips(n[0], 0)
+
+pygame.font.init()
+    
 speed = 2.5
 position_new_rec = new_rec.get_rect()
 position_new_rec.x = 650
@@ -239,4 +260,11 @@ while continuer:
     for proof in proofs:
         fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
     time.sleep(spc)
+#    for node in n:
+#        basicfont = pygame.font.SysFont(None, 48)
+#        text = basicfont.render(unicode(node.weigth), True, (255, 0, 0), (255, 255, 255))
+#        textrect = text.get_rect()
+#        textrect.centerx = node.pos.x * 32
+#        textrect.centery = node.pos.y * 32
+#        fenetre.blit(text, textrect)
     pygame.display.flip()
