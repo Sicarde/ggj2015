@@ -90,19 +90,24 @@ class Proof():
     image = None
     isPrinted = False
     isOnFloor = True
-    def __init__(self, name, x, y):
+    t = "rope"
+    color = "red"
+    def __init__(self, name, x, y, t, color):
         self.pos = Position(x, y)
         self.image = pygame.image.load(name).convert_alpha()
+        self.t = t
+        self.color = color
 
 class Player():
     rotate = 0
     proof = None
     haveProof = False
     isPaused = False
-    def __init__(self):
+    def __init__(self, color, sprite):
         self.pos = Position(2.0, 15.0)
-        self.Sprite = TestSprite("img/Perso/red.png")
+        self.Sprite = TestSprite(sprite)
         self.Sprite.pause()
+        self.color = color
     def takeProof(self, proof):
         self.proof = proof
         self.proof.isPrinted = False
@@ -172,8 +177,6 @@ class inspectorPedro():
         self.direction = node
         self.pos = node.pos
         self.Sprite = TestSprite("img/Perso/pedro.png")
-        self.Sprite.pause()
-        self.image = self.Sprite.image
     def rotate(self):
         lol = math.sqrt(pow(self.node.pos.x - self.direction.pos.x, 2) +  pow(self.node.pos.y - self.direction.pos.y, 2))
         if (lol != 0):
@@ -185,7 +188,7 @@ class inspectorPedro():
         self.Sprite.update()
         self.Sprite.rect.x = self.pos.x * 32
         self.Sprite.rect.y = self.pos.y * 32
-        fenetre.blit(self.image, self.Sprite.rect)
+        fenetre.blit(self.Sprite.image, self.Sprite.rect)
     def move(self, fenetre, players):
         if ((round(self.pos.x * 10) == round(self.direction.pos.x * 10)) and (round(self.pos.y * 10) == round(self.direction.pos.y * 10))):
             self.node = self.direction
@@ -230,17 +233,30 @@ joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_coun
 for joy in joysticks:
     joy.init()
 
-players = [Player()]
+players = [Player("red", "img/Perso/red.png")]
+#players = [Player("green", "img/Perso/green.png")]
+#players = [Player("purple", "img/Perso/purple.png")]
+#players = [Player("orange", "img/Perso/orange.png")]
 proofsPaths = [ "img/Preuves/red_proof/red_cut_32.png", "img/Preuves/red_proof/red_lighter_32.png", "img/Preuves/red_proof/red_rope_32.png", "img/Preuves/red_proof/red_spoon__32.png", "img/Preuves/red_proof/red_nes_32.png", "img/Preuves/red_proof/red_screwdriver_32.png", "img/Preuves/green_proof/green_cut_32.png", "img/Preuves/green_proof/green_lighter_32.png", "img/Preuves/green_proof/green_rope_32.png", "img/Preuves/green_proof/green_spoon_32.png", "img/Preuves/green_proof/green_nes_32.png", "img/Preuves/green_proof/green_screwdriver_32.png", "img/Preuves/orange_proof/orange_cut_32.png", "img/Preuves/orange_proof/orange_lighter_32.png", "img/Preuves/orange_proof/orange_rope_32.png", "img/Preuves/orange_proof/orange_spoon_32.png", "img/Preuves/orange_proof/orange_nes_32.png", "img/Preuves/orange_proof/orange_screwdriver_32.png", "img/Preuves/purple_proof/purple_cut_32.png", "img/Preuves/purple_proof/purple_lighter_32.png", "img/Preuves/purple_proof/purple_rope_32.png", "img/Preuves/purple_proof/purple_spoon_32.png", "img/Preuves/purple_proof/purple_nes_32.png", "img/Preuves/purple_proof/purple_screwdriver_32.png" ]
+proofsTypes = [ "cut", "lighter", "rope", "spoon", "nes", "screwdriver" ]
+proofsTypesImage = [ pygame.image.load("img/UI/Preuves/cut_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/lighter_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/rope_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/spoon_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/nes_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/screwdriver_64.png").convert_alpha() ]
+proofsColors = [ "red", "green", "orange", "purple" ]
 proofs = []
+i = 0
+j = 0
 for proofPath in proofsPaths:
     x = random.randint(1, 28)
     y = random.randint(1, 38)
     while (lala[x][y] != 0):
         x = random.randint(1, 28)
         y = random.randint(1, 38)
-    proofs.append(Proof(proofPath, y, x))
+    proofs.append(Proof(proofPath, y, x, proofsTypes[i], proofsColors[j]))
+    i += 1
+    if (i >= len(proofsTypes)):
+        i = 0
+        j += 1
 background = pygame.image.load("img/Map/map.png").convert_alpha()
+hud = pygame.image.load("img/UI/hud/hud.png").convert_alpha()
 menu_c = 1
 menu = pygame.image.load("img/UI/menu/main_menu.png").convert()
 new_rec = pygame.image.load("img/UI/menu/hand.png").convert_alpha()
@@ -436,11 +452,26 @@ while continuer:
         checkProofNearby(players, proofs)
     fenetre.fill((0, 0, 0))
     fenetre.blit(background, (0, 0))
+    fenetre.blit(hud, (32 * 40, 0))
     for proof in proofs:
         if (proof.isPrinted == True):
             fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
     for player in players:
         player.draw(fenetre)
+        if (player.haveProof == True):
+            i = 0
+            while (proofsTypes[i] != player.proof.t):
+                i += 1
+            offsetx = 18
+            if (player.color == "red"):
+                offsety = 19
+            elif (player.color == "green"):
+                offsety = 171
+            elif (player.color == "purple"):
+                offsety = 314
+            else:
+                offsety = 453
+            fenetre.blit(proofsTypesImage[i], Rect(40 * 32 + offsetx, offsety, 64, 64))
     inspector.move(fenetre, players)
 #    time.sleep(0.01)
 #    for node in n:
