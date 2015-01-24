@@ -286,7 +286,9 @@ position_new_rec.x = 200
 position_new_rec.y = 250
 fenetre.blit(menu, (0,0))
 fenetre.blit(new_rec, position_new_rec)
+clock = pygame.time.Clock()
 while menu_c == 1:
+    clock.tick(60)
     for event in pygame.event.get():
         if event.type == QUIT:
             menu_c = 0
@@ -328,6 +330,7 @@ pygame.key.set_repeat(100, 10)
 k = pygame.key.get_pressed()
 spc_player = 0.25
 while continuer:
+    clock.tick(60)
     for event in pygame.event.get():
         if (event.type == QUIT):
             continuer = 0
