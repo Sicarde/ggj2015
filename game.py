@@ -115,7 +115,10 @@ def onVaMangerDesChips(node, weigth):
     for n in node.nodeList:
         if (weigth < n.weigth):
             onVaMangerDesChips(n, weigth + 1)
-    
+
+def clean(nlist):
+    for n in nlist:
+        n.weigth = 50
 
 def testlist(nodelist):
     node = nodelist[0]
@@ -123,6 +126,8 @@ def testlist(nodelist):
         if (node.weigth != n.weigth):
             return 1
     return 0
+
+random.seed()
 
 class inspectorPedro():
     direction = None
@@ -138,17 +143,16 @@ class inspectorPedro():
         self.pos = node.pos
     def move(self, fenetre, players):
         if ((round(self.pos.x) == round(self.direction.pos.x)) and (round(self.pos.y) == round(self.direction.pos.y))):
+            self.direction = min(self.node.nodeList)
             self.node = self.direction
-            if (self.node.weigth != 0):
-                if (testlist(self.node.nodeList)):
-                    self.direction = min(self.node.nodeList)
-                else:
-                    self.direction = random.choice(self.node.nodeList)
         else:
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
             vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
             self.pos.x -= vecteur.x / 10
             self.pos.y -= vecteur.y / 10
+        if (self.node.weigth == 0):
+            clean(n)
+            onVaMangerDesChips(n[random.randint(0, 51)], 0)
         fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
@@ -185,7 +189,7 @@ menu = pygame.image.load("super_menu.png").convert()
 new_rec = pygame.image.load("hand.png").convert_alpha()
 merci = pygame.image.load("OPTION.png").convert()
 
-n = [Node(19.0, 2.0, [])]
+n = [Node(19.0, 1.2, [])]
 n.append(Node(19.0, 9.0, [n[0]]))
 n.append(Node(19.0, 11.0, [n[1]]))
 n.append(Node(12.0, 11.0, [n[2]]))
@@ -201,9 +205,9 @@ n.append(Node(27.0, 11.0, [n[9], n[2]]))
 n.append(Node(29.0, 15.0, [n[10], n[9], n[8]]))
 n.append(Node(12.0, 9.0, [n[3]]))
 n.append(Node(11.0, 7.0, [n[12]]))
-n.append(Node(11.0, 2.0, [n[13]]))
+n.append(Node(12.0, 1.2, [n[13]]))
 
-n.append(Node(5.0, 2.0, [n[14]]))
+n.append(Node(5.0, 1.2, [n[14]]))
 n.append(Node(5.0, 7.0, [n[15], n[13]]))
 n.append(Node(6.0, 9.0, [n[16], n[13]]))
 n.append(Node(6.0, 11.0, [n[17]]))
@@ -216,8 +220,8 @@ n.append(Node(1.0, 11.0, [n[22], n[18]]))
 n.append(Node(27.0, 9.0, [n[10]]))
 
 n.append(Node(28.0, 7.0, [n[24]]))
-n.append(Node(28.0, 2.0, [n[25]]))
-n.append(Node(34.0, 2.0, [n[26]]))
+n.append(Node(27.0, 1.2, [n[25]]))
+n.append(Node(34.0, 1.2, [n[26]]))
 n.append(Node(34.0, 7.0, [n[27], n[25]]))
 n.append(Node(33.0, 9.0, [n[28], n[25]]))
 
@@ -231,7 +235,7 @@ n.append(Node(27.0, 20.0, [n[8]]))
 n.append(Node(28.0, 22.0, [n[35]]))
 n.append(Node(34.0, 22.0, [n[36]]))
 n.append(Node(34.0, 27.0, [n[37]]))
-n.append(Node(27.0, 27.0, [n[38], n[36]]))
+n.append(Node(27.0, 27.0, [n[38]]))
 
 n.append(Node(25.0, 24.0, [n[39], n[36], n[35]]))
 n.append(Node(23.0, 24.0, [n[40]]))
@@ -243,14 +247,14 @@ n.append(Node(14.0, 24.0, [n[43]]))
 n.append(Node(11.0, 27.0, [n[45]]))
 n.append(Node(5.0, 27.0, [n[46]]))
 n.append(Node(5.0, 22.0, [n[47]]))
-n.append(Node(10.0, 22.0, [n[48], n[46], n[45]]))
+n.append(Node(10.0, 22.0, [n[48], n[45]]))
 
 n.append(Node(12.0, 20.0, [n[45], n[49], n[5]]))
 n.append(Node(19.0, 16.0, [n[7]]))
 
 inspector = inspectorPedro(n[0])
 
-#onVaMangerDesChips(n[51], 0)
+onVaMangerDesChips(n[51], 0)
 
 pygame.font.init()
     
@@ -320,7 +324,7 @@ while continuer:
         player.draw(fenetre)
     for proof in proofs:
         fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
-    time.sleep(0.25)
+    time.sleep(spc)
 #    for node in n:
 #        basicfont = pygame.font.SysFont(None, 48)
 #        text = basicfont.render(unicode(node.weigth), True, (255, 0, 0), (255, 255, 255))
