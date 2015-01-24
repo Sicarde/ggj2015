@@ -319,20 +319,24 @@ while continuer:
             if (event.key == K_ESCAPE):
                 continuer = 0
             if (keys[K_LEFT]):
-                if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1):
-                    players[0].pos.x -= spc_player
+                if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1 and lala[int(players[0].pos.y)][int(math.ceil(players[0].pos.x - spc))] != 1):
+                    if (lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x - spc)] != 1 and lala[int(math.ceil(players[0].pos.y))][int(math.ceil(players[0].pos.x - spc))] != 1):
+                        players[0].pos.x -= spc_player
                 players[0].Sprite.play()
             elif (keys[K_RIGHT]):
-                if (lala[int(players[0].pos.y)][int(math.ceil((players[0].pos.x + spc)))] != 1):
-                    players[0].pos.x += spc_player
+                if (lala[int(players[0].pos.y)][int(math.ceil((players[0].pos.x + spc)))] != 1 and lala[int(players[0].pos.y)][int(players[0].pos.x + spc)] != 1):
+                    if (lala[int(math.ceil(players[0].pos.y))][int(math.ceil((players[0].pos.x + spc)))] != 1 and lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x + spc)] != 1):
+                        players[0].pos.x += spc_player
                 players[0].Sprite.play()
-            elif (keys[K_UP]):
-                if (lala[int(players[0].pos.y - spc)][int(players[0].pos.x)] != 1):
-                    players[0].pos.y -= spc_player
+            if (keys[K_UP]):
+                if (lala[int(players[0].pos.y - spc)][int(players[0].pos.x)] != 1 and lala[int(math.ceil(players[0].pos.y - spc))][int(players[0].pos.x)] != 1):
+                    if (lala[int(players[0].pos.y - spc)][int(math.ceil(players[0].pos.x))] != 1 and lala[int(math.ceil(players[0].pos.y - spc))][int(math.ceil(players[0].pos.x))] != 1):
+                        players[0].pos.y -= spc_player
                 players[0].Sprite.play()
             elif (keys[K_DOWN]):
-                if (lala[int(math.ceil((players[0].pos.y + spc)))][int(players[0].pos.x)] != 1):
-                    players[0].pos.y += spc_player
+                if (lala[int(math.ceil((players[0].pos.y + spc)))][int(players[0].pos.x)] != 1 and lala[int(players[0].pos.y + spc)][int(players[0].pos.x)] != 1):
+                    if (lala[int(math.ceil((players[0].pos.y + spc)))][int(math.ceil(players[0].pos.x))] != 1 and lala[int(players[0].pos.y + spc)][int(math.ceil(players[0].pos.x))] != 1):
+                        players[0].pos.y += spc_player
                 players[0].Sprite.play()
         if (event.type == KEYUP):
             players[0].Sprite.pause()
