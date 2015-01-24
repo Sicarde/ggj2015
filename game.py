@@ -64,23 +64,25 @@ class Player():
         proof.isPrinted = True
         proof = None
 
-class Node():
+class Node(object):
     def __init__(self, x, y, nodeList):
         self.pos = Position(x, y)
         self.nodeList = nodeList
-        for node in nodeList:
-            node.nodeList.append(self)
+        i = 0
+        while i < len(nodeList):
+            nodeList[i].nodeList.append(self)
+            i += 1
     def append(self, node):
         self.nodeList.append(node)
         node.nodeList.append(self)
         
 class inspectorPedro():
     direction = 0
-    #direction = { UP, DOWN, LEFT, RIGHT }
+    #direction = { UP, DOWN, LEFT, RIGHT ]
     checkingPlayer = None
     goToRoom = 0
     room = 0
-    #room = { IDLE, GET OUT, RED, GREEN, ORANGE, PURP } (7931)
+    #room = { IDLE, GET OUT, RED, GREEN, ORANGE, PURP ] (7931)
     def __init__(self):
         self.pos = Position(21.0, 2.0)
     def move(self, fenetre, players):
@@ -118,67 +120,67 @@ proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
 background = pygame.image.load("map.png").convert_alpha()
 
 
-n = {Node(21.0, 2.0, None)}
-n.append(Node(21.0, 9.0, {n[0]}))
-n.append(Node(21.0, 11.0, {n[1]}))
-n.append(Node(14.0, 11.0, {n[2]}))
-n.append(Node(10.0, 15.0, {n[3]}))
+n = [Node(21.0, 2.0, None)]
+n.append(Node(21.0, 9.0, [n[0]]))
+n.append(Node(21.0, 11.0, [n[1]]))
+n.append(Node(14.0, 11.0, [n[2]]))
+n.append(Node(10.0, 15.0, [n[3]]))
 
-n.append(Node(12.0, 18.0, {n[4], n[3]}))
-n.append(Node(15.0, 15.0, {n[2], n[3], n[4], n[5]}))
-n.append(Node(19.0, 18.0, {n[5], n[6]}))
-n.append(Node(27.0, 18.0, {n[7]}))
-n.append(Node(24.0, 15.0, {n[8], n[7], n[2]}))
+n.append(Node(12.0, 18.0, [n[4], n[3]]))
+n.append(Node(15.0, 15.0, [n[2], n[3], n[4], n[5]]))
+n.append(Node(19.0, 18.0, [n[5], n[6]]))
+n.append(Node(27.0, 18.0, [n[7]]))
+n.append(Node(24.0, 15.0, [n[8], n[7], n[2]]))
 
-n.append(Node(27.0, 11.0, {n[9], n[2]}))
-n.append(Node(29.0, 15.0, {n[10], n[9], n[8]}))
-n.append(Node(7.0, 9.0, {n[3]}))
-n.append(Node(10.0, 7.0, {n[12]}))
-n.append(Node(11.0, 3.0, {n[13]}))
+n.append(Node(27.0, 11.0, [n[9], n[2]]))
+n.append(Node(29.0, 15.0, [n[10], n[9], n[8]]))
+n.append(Node(7.0, 9.0, [n[3]]))
+n.append(Node(10.0, 7.0, [n[12]]))
+n.append(Node(11.0, 3.0, [n[13]]))
 
-n.append(Node(5.0, 3.0, {n[14]}))
-n.append(Node(5.0, 7.0, {n[15], n[13]}))
-n.append(Node(6.0, 9.0, {n[16], n[13]}))
-n.append(Node(6.0, 11.0, {n[17]}))
-n.append(Node(8.0, 11.0, {n[18]}))
+n.append(Node(5.0, 3.0, [n[14]]))
+n.append(Node(5.0, 7.0, [n[15], n[13]]))
+n.append(Node(6.0, 9.0, [n[16], n[13]]))
+n.append(Node(6.0, 11.0, [n[17]]))
+n.append(Node(8.0, 11.0, [n[18]]))
 
-n.append(Node(8.0, 15.0, {n[19]}))
-n.append(Node(8.0, 18.0, {n[20]}))
-n.append(Node(1.0, 18.0, {n[21]}))
-n.append(Node(1.0, 11.0, {n[22], n[18]}))
-n.append(Node(27.0, 9.0, {n[10]}))
+n.append(Node(8.0, 15.0, [n[19]]))
+n.append(Node(8.0, 18.0, [n[20]]))
+n.append(Node(1.0, 18.0, [n[21]]))
+n.append(Node(1.0, 11.0, [n[22], n[18]]))
+n.append(Node(27.0, 9.0, [n[10]]))
 
-n.append(Node(29.0, 7.0, {n[24]}))
-n.append(Node(28.0, 3.0, {n[25]}))
-n.append(Node(34.0, 3.0, {n[26]}))
-n.append(Node(34.0, 7.0, {n[27], n[25]}))
-n.append(Node(33.0, 9.0, {n[28], n[25]}))
+n.append(Node(29.0, 7.0, [n[24]]))
+n.append(Node(28.0, 3.0, [n[25]]))
+n.append(Node(34.0, 3.0, [n[26]]))
+n.append(Node(34.0, 7.0, [n[27], n[25]]))
+n.append(Node(33.0, 9.0, [n[28], n[25]]))
 
-n.append(Node(33.0, 11.0, {n[29]}))
-n.append(Node(37.0, 13.0, {n[30]}))
-n.append(Node(36.0, 18.0, {n[31]}))
-n.append(Node(31.0, 18.0, {n[32]}))
-n.append(Node(31.0, 15.0, {n[33], n[31], n[30], n[11]}))
+n.append(Node(33.0, 11.0, [n[29]]))
+n.append(Node(37.0, 13.0, [n[30]]))
+n.append(Node(36.0, 18.0, [n[31]]))
+n.append(Node(31.0, 18.0, [n[32]]))
+n.append(Node(31.0, 15.0, [n[33], n[31], n[30], n[11]]))
 
-n.append(Node(27.0, 20.0, {n[8]}))
-n.append(Node(28.0, 22.0, {n[35]}))
-n.append(Node(34.0, 22.0, {n[36]}))
-n.append(Node(34.0, 27.0, {n[37]}))
-n.append(Node(27.0, 27.0, {n[38], n[36]}))
+n.append(Node(27.0, 20.0, [n[8]]))
+n.append(Node(28.0, 22.0, [n[35]]))
+n.append(Node(34.0, 22.0, [n[36]]))
+n.append(Node(34.0, 27.0, [n[37]]))
+n.append(Node(27.0, 27.0, [n[38], n[36]]))
 
-n.append(Node(25.0, 24.0, {n[39], n[36], n[35]}))
-n.append(Node(23.0, 24.0, {n[40]}))
-n.append(Node(20.0, 27.0, {n[41]}))
-n.append(Node(16.0, 24.0, {n[42], n[41]}))
-n.append(Node(19.0, 20.0, {n[43], n[42], n[41], n[7]}))
+n.append(Node(25.0, 24.0, [n[39], n[36], n[35]]))
+n.append(Node(23.0, 24.0, [n[40]]))
+n.append(Node(20.0, 27.0, [n[41]]))
+n.append(Node(16.0, 24.0, [n[42], n[41]]))
+n.append(Node(19.0, 20.0, [n[43], n[42], n[41], n[7]]))
 
-n.append(Node(14.0, 24.0, {n[43]}))
-n.append(Node(11.0, 27.0, {n[45]}))
-n.append(Node(5.0, 27.0, {n[46]}))
-n.append(Node(5.0, 22.0, {n[47]}))
-n.append(Node(10.0, 22.0, {n[48], n[46], n[45]}))
+n.append(Node(14.0, 24.0, [n[43]]))
+n.append(Node(11.0, 27.0, [n[45]]))
+n.append(Node(5.0, 27.0, [n[46]]))
+n.append(Node(5.0, 22.0, [n[47]]))
+n.append(Node(10.0, 22.0, [n[48], n[46], n[45]]))
 
-n.append(Node(12.0, 20.0, {n[45], n[49], n[5]}))
+n.append(Node(12.0, 20.0, [n[45], n[49], n[5]]))
 
 while continuer:
     for event in pygame.event.get():
