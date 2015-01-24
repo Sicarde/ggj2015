@@ -102,7 +102,7 @@ class Proof():
         self.image = pygame.image.load(name).convert_alpha()
 
 class Player():
-    color = "red"
+    rotate = 0
     proof = None
     haveProof = False
     isPaused = False
@@ -126,6 +126,7 @@ class Player():
         self.Sprite.rect.x = self.pos.x * 32
         self.Sprite.rect.y = self.pos.y * 32
         fenetre.blit(self.Sprite.image, self.Sprite.rect)
+#    def move
 
 class Node():
     weigth = 50
@@ -178,15 +179,25 @@ class inspectorPedro():
         self.direction = node
         self.pos = node.pos
         self.Sprite = TestSprite("img/Perso/pedro.png")
+        self.Sprite.pause()
+        self.image = self.Sprite.image
+    def rotate(self):
+        lol = math.sqrt(pow(self.node.pos.x - self.direction.pos.x, 2) +  pow(self.node.pos.y - self.direction.pos.y, 2))
+        if (lol != 0):
+            vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
+            if (vecteur.x != 0):
+                angle = math.degrees(math.tan(vecteur.y / vecteur.x))
+                self.image = pygame.transform.rotate(self.Sprite.image, -1 * angle - 90)
     def draw(self, fenetre):
         self.Sprite.update()
         self.Sprite.rect.x = self.pos.x * 32
         self.Sprite.rect.y = self.pos.y * 32
-        fenetre.blit(self.Sprite.image, self.Sprite.rect)
+        fenetre.blit(self.image, self.Sprite.rect)
     def move(self, fenetre, players):
         if ((round(self.pos.x * 10) == round(self.direction.pos.x * 10)) and (round(self.pos.y * 10) == round(self.direction.pos.y * 10))):
             self.node = self.direction
             self.direction = min(self.node.nodeList)
+            self.rotate()
         else:
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
             vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
@@ -221,6 +232,11 @@ taille = hauteur, largeur = 1920, 1080
 fenetre = pygame.display.set_mode(taille)
 
 continuer = 1
+pygame.joystick.init()
+joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+for joy in joysticks:
+    joy.init()
+
 players = [Player()]
 proofsPaths = [ "img/Preuves/red_proof/red_cut_32.png", "img/Preuves/red_proof/red_lighter_32.png", "img/Preuves/red_proof/red_rope_32.png", "img/Preuves/red_proof/red_spoon__32.png", "img/Preuves/red_proof/red_nes_32.png", "img/Preuves/red_proof/red_screwdriver_32.png", "img/Preuves/green_proof/green_cut_32.png", "img/Preuves/green_proof/green_lighter_32.png", "img/Preuves/green_proof/green_rope_32.png", "img/Preuves/green_proof/green_spoon_32.png", "img/Preuves/green_proof/green_nes_32.png", "img/Preuves/green_proof/green_screwdriver_32.png", "img/Preuves/orange_proof/orange_cut_32.png", "img/Preuves/orange_proof/orange_lighter_32.png", "img/Preuves/orange_proof/orange_rope_32.png", "img/Preuves/orange_proof/orange_spoon_32.png", "img/Preuves/orange_proof/orange_nes_32.png", "img/Preuves/orange_proof/orange_screwdriver_32.png", "img/Preuves/purple_proof/purple_cut_32.png", "img/Preuves/purple_proof/purple_lighter_32.png", "img/Preuves/purple_proof/purple_rope_32.png", "img/Preuves/purple_proof/purple_spoon_32.png", "img/Preuves/purple_proof/purple_nes_32.png", "img/Preuves/purple_proof/purple_screwdriver_32.png" ]
 proofs = []
@@ -311,7 +327,36 @@ inspector = inspectorPedro(n[0])
 onVaMangerDesChips(n[51], 0)
 
 pygame.font.init()
-    
+
+def getEvent(e, joy):
+    ev = [0, 0, 0]
+    if (e.type == KEYDOWN and joy == -1):
+        k = pygame.key.get_pressed()
+        if k[K_DOWN]:
+            ev[0] = -1
+        if k[K_UP]:
+            ev[0] = 1
+        if k[K_LEFT]:
+            ev[1] = -1
+        if k[K_RIGHT]:
+            ev[1] = 1
+        if k[K_SPACE]:
+            ev[2] = 1
+        if k[K_ESCAPE]:
+            ev[2] = -1
+    if (e.type == JOYHATMOTION):
+        if (e.joy == joy):
+            g = joysticks[joy].get_hat(0)
+            ev[0] = g[1]
+            ev[1] = g[0]
+    if (e.type == JOYBUTTONDOWN):
+        if (e.joy == joy or joy == -1):
+            if (e.button == 0):
+                ev[2] = 1
+            if (e.button == 1):
+                ev[2] = -1
+    return ev
+
 speed = 2.5
 position_new_rec = new_rec.get_rect()
 position_new_rec.x = 200
@@ -322,37 +367,38 @@ clock = pygame.time.Clock()
 while menu_c == 1:
     clock.tick(60)
     for event in pygame.event.get():
-        if event.type == QUIT:
-            menu_c = 0
-        if event.type == KEYDOWN:
-            if event.key == K_DOWN:
-                son.play()
-                position_new_rec.y = position_new_rec.y + 120
-                if position_new_rec.y >= 620:
+        e = getEvent(event, -1)    
+        if e[2] == -1:
+            exit(0)
+        if e[0] < 0:
+            son.play()
+            position_new_rec.y = position_new_rec.y + 120
+            if position_new_rec.y >= 620:
                     position_new_rec.y = 250
-            if event.key == K_UP:
-                son.play()
-                position_new_rec.y = position_new_rec.y - 120
-                if position_new_rec.y <= 220:
+        if e[0] > 0:
+            son.play()
+            position_new_rec.y = position_new_rec.y - 120
+            if position_new_rec.y <= 220:
                     position_new_rec.y = 610
-            if position_new_rec.y == 250 and event.key == K_SPACE:
-                menu_c = 0
-                son2.play()
-            if position_new_rec.y == 610 and event.key == K_SPACE:
-                son2.play()
-                while menu_c == 1:
-                    for event in pygame.event.get():
-                        if event.type == QUIT:
+        if position_new_rec.y == 250 and e[2] == 1:
+            menu_c = 0
+            son2.play()
+        if position_new_rec.y == 610 and e[2] == 1:
+            son2.play()
+            while menu_c == 1:
+                for event in pygame.event.get():
+                    e = getEvent(event, -1)
+                    if e[2] == -1:
+                        menu_c = 0
+                    if e[0] == -1:
+                        if e[2] == -1:
+                            fenetre.blit(menu, (0,0))
+                            pygame.display.flip()
                             menu_c = 0
-                        if event.type == KEYDOWN:
-                            if event.key == K_ESCAPE:
-                                fenetre.blit(menu, (0,0))
-                                pygame.display.flip()
-                                menu_c = 0
-                        fenetre.blit(merci, (0,0))
-                        pygame.display.flip()
-                menu_c = 1
-            if position_new_rec.y == 490 and event.key == K_SPACE:
+                    fenetre.blit(merci, (0,0))
+                    pygame.display.flip()
+            menu_c = 1
+        if position_new_rec.y == 490 and e[2] == 1:
                 exit(0)
     fenetre.blit(menu, (0,0))
     fenetre.blit(new_rec, position_new_rec)
@@ -364,44 +410,41 @@ spc_player = 0.25
 while continuer:
     clock.tick(60)
     for event in pygame.event.get():
-        if (event.type == QUIT):
+        e = getEvent(event, 0)
+        if (e[2] == -1):
             continuer = 0
-        if (event.type == KEYDOWN):
-            keys = pygame.key.get_pressed()
-            if (event.key == K_ESCAPE):
-                continuer = 0
-            if (event.key == K_SPACE):
-                if (players[0].haveProof == False):
-                    for proof in proofs:
-                        if (proof.pos.x - players[0].pos.x > -1 and proof.pos.x - players[0].pos.x < 1):
-                            if (proof.pos.y - players[0].pos.y > -1 and proof.pos.y - players[0].pos.y < 1):
-                                players[0].takeProof(proof)
-                                break
-                else:
-                    players[0].putProof()
-            if (keys[K_LEFT]):
-                if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1 and lala[int(players[0].pos.y)][int(math.ceil(players[0].pos.x - spc))] != 1):
-                    if (lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x - spc)] != 1 and lala[int(math.ceil(players[0].pos.y))][int(math.ceil(players[0].pos.x - spc))] != 1):
-                        players[0].pos.x -= spc_player
-                players[0].Sprite.play()
-            elif (keys[K_RIGHT]):
-                if (lala[int(players[0].pos.y)][int(math.ceil((players[0].pos.x + spc)))] != 1 and lala[int(players[0].pos.y)][int(players[0].pos.x + spc)] != 1):
-                    if (lala[int(math.ceil(players[0].pos.y))][int(math.ceil((players[0].pos.x + spc)))] != 1 and lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x + spc)] != 1):
-                        players[0].pos.x += spc_player
-                players[0].Sprite.play()
-            if (keys[K_UP]):
-                if (lala[int(players[0].pos.y - spc)][int(players[0].pos.x)] != 1 and lala[int(math.ceil(players[0].pos.y - spc))][int(players[0].pos.x)] != 1):
-                    if (lala[int(players[0].pos.y - spc)][int(math.ceil(players[0].pos.x))] != 1 and lala[int(math.ceil(players[0].pos.y - spc))][int(math.ceil(players[0].pos.x))] != 1):
-                        players[0].pos.y -= spc_player
-                players[0].Sprite.play()
-            elif (keys[K_DOWN]):
-                if (lala[int(math.ceil((players[0].pos.y + spc)))][int(players[0].pos.x)] != 1 and lala[int(players[0].pos.y + spc)][int(players[0].pos.x)] != 1):
-                    if (lala[int(math.ceil((players[0].pos.y + spc)))][int(math.ceil(players[0].pos.x))] != 1 and lala[int(players[0].pos.y + spc)][int(math.ceil(players[0].pos.x))] != 1):
-                        players[0].pos.y += spc_player
-                players[0].Sprite.play()
-            checkProofNearby(players, proofs)
-        if (event.type == KEYUP):
+        if (e[2] == 1):
+            if (players[0].haveProof == False):
+                for proof in proofs:
+                    if (proof.pos.x - players[0].pos.x > -1 and proof.pos.x - players[0].pos.x < 1):
+                        if (proof.pos.y - players[0].pos.y > -1 and proof.pos.y - players[0].pos.y < 1):
+                            players[0].takeProof(proof)
+                            break
+            else:
+                players[0].putProof()
+        if (e[1] == -1):
+            if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1 and lala[int(players[0].pos.y)][int(math.ceil(players[0].pos.x - spc))] != 1):
+                if (lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x - spc)] != 1 and lala[int(math.ceil(players[0].pos.y))][int(math.ceil(players[0].pos.x - spc))] != 1):
+                    players[0].pos.x -= spc_player
+            players[0].Sprite.play()
+        elif (e[1] == 1):
+            if (lala[int(players[0].pos.y)][int(math.ceil((players[0].pos.x + spc)))] != 1 and lala[int(players[0].pos.y)][int(players[0].pos.x + spc)] != 1):
+                if (lala[int(math.ceil(players[0].pos.y))][int(math.ceil((players[0].pos.x + spc)))] != 1 and lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x + spc)] != 1):
+                    players[0].pos.x += spc_player
+            players[0].Sprite.play()
+        if (e[0] == 1):
+            if (lala[int(players[0].pos.y - spc)][int(players[0].pos.x)] != 1 and lala[int(math.ceil(players[0].pos.y - spc))][int(players[0].pos.x)] != 1):
+                if (lala[int(players[0].pos.y - spc)][int(math.ceil(players[0].pos.x))] != 1 and lala[int(math.ceil(players[0].pos.y - spc))][int(math.ceil(players[0].pos.x))] != 1):
+                    players[0].pos.y -= spc_player
+            players[0].Sprite.play()
+        elif (e[0] == -1):
+            if (lala[int(math.ceil((players[0].pos.y + spc)))][int(players[0].pos.x)] != 1 and lala[int(players[0].pos.y + spc)][int(players[0].pos.x)] != 1):
+                if (lala[int(math.ceil((players[0].pos.y + spc)))][int(math.ceil(players[0].pos.x))] != 1 and lala[int(players[0].pos.y + spc)][int(math.ceil(players[0].pos.x))] != 1):
+                    players[0].pos.y += spc_player
+            players[0].Sprite.play()
+        if (e[0] == 1):
             players[0].Sprite.pause()
+        checkProofNearby(players, proofs)
     fenetre.fill((0, 0, 0))
     fenetre.blit(background, (0, 0))
     for proof in proofs:

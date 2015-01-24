@@ -10,7 +10,7 @@ fenetre = pygame.display.set_mode((300,300))
 
 #On compte les joysticks
 nb_joysticks = pygame.joystick.get_count()
-#Et on en crée un s'il y a en au moins un
+#Et on en cree un s'il y a en au moins un
 if nb_joysticks > 0:
     mon_joystick = pygame.joystick.Joystick(0)
 
@@ -36,6 +36,6 @@ if nb_joysticks > 0:
                     if event.axis ==1 and event.value < 0:
                         print("miest_l")
     else:
-        print("Votre Joystick ne possède pas au moins 4 boutons")
+        print("Votre Joystick ne possede pas au moins 4 boutons")
 else:
     print("ta mere")
