@@ -1,5 +1,6 @@
 #! /usr/bin/python2                                                                                                                                                                          # -*- coding: utf-8 -*-
 
+import random
 import pygame
 import sys
 import time
@@ -38,6 +39,28 @@ lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 
 spc = 0.5
 
+class TestSprite(pygame.sprite.Sprite):
+    def __init__(self):
+        super(TestSprite, self).__init__()
+        tmp = pygame.Surface((32, 32))
+        self.images = []
+        self.rect = Rect(100, 100, 32, 32)
+        plop = pygame.image.load("img/Perso/red.png").convert_alpha()
+        tmp.blit(plop, (0, 0), (0, 0, 32, 32))
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        plop = pygame.image.load("block1bas.png").convert_alpha()
+        tmp.blit(plop, (0, 0), (0, 0, 32, 32))
+        self.images.append(tmp)
+        # assuming both images are 64x64 pixels
+        self.index = 0
+        self.image = self.images[self.index]
+    def update(self):
+        self.index += 1
+        if self.index >= len(self.images):
+            self.index = 0
+        self.image = self.images[self.index]
+
 class Position():
     x = 5.0
     y = 15.0
@@ -58,12 +81,18 @@ class Player():
     isPaused = False
     def __init__(self):
         self.pos = Position(5.0, 15.0)
+        self.Sprite = TestSprite()
     def takeProof(self, proof):
         proof.isPrinted = false
     def putProof(self, proof):
         proof.pos = self.pos
         proof.isPrinted = True
         proof = None
+    def draw(self, fenetre):
+        self.Sprite.update()
+        self.Sprite.rect.x = self.pos.x * 32
+        self.Sprite.rect.y = self.pos.y * 32
+        fenetre.blit(self.Sprite.image, self.Sprite.rect)
 
 class Node():
     weigth = 50
@@ -84,7 +113,14 @@ def onVaMangerDesChips(node, weigth):
         if (weigth < n.weigth):
             onVaMangerDesChips(n, weigth + 1)
     
-        
+
+def testlist(nodelist):
+    node = nodelist[0]
+    for n in nodelist:
+        if (node.weigth != n.weigth):
+            return 1
+    return 0
+
 class inspectorPedro():
     direction = 0
     #direction = { UP, DOWN, LEFT, RIGHT ]
@@ -97,7 +133,10 @@ class inspectorPedro():
         self.pos = node.pos
     def move(self, fenetre, players):
         if (self.node.weigth != 0):
-            self.node = min(self.node.nodeList)
+            if (testlist(self.node.nodeList)):
+                self.node = min(self.node.nodeList)
+            else:
+                self.node = random.choice(self.node.nodeList)
             self.pos = self.node.pos
         fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
@@ -196,11 +235,11 @@ n.append(Node(5.0, 22.0, [n[47]]))
 n.append(Node(10.0, 22.0, [n[48], n[46], n[45]]))
 
 n.append(Node(12.0, 20.0, [n[45], n[49], n[5]]))
-
+n.append(Node(19.0, 16.0, [n[7]]))
 
 inspector = inspectorPedro(n[0])
 
-onVaMangerDesChips(n[47], 0)
+#onVaMangerDesChips(n[51], 0)
 
 pygame.font.init()
     
@@ -256,7 +295,8 @@ while continuer:
     fenetre.blit(background, (0, 0))
     inspector.move(fenetre, players)
     for player in players:
-        fenetre.blit(block1bas, Rect(player.pos.x * 32, player.pos.y * 32, 32, 32))
+        player.draw(fenetre)
+        #fenetre.blit(block1bas, Rect(player.pos.x * 32, player.pos.y * 32, 32, 32))
     for proof in proofs:
         fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
     time.sleep(spc)
