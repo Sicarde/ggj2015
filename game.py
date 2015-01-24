@@ -1,5 +1,6 @@
 #! /usr/bin/python2                                                                                                                                                                          # -*- coding: utf-8 -*-
 
+import random
 import pygame
 import sys
 import time
@@ -84,7 +85,14 @@ def onVaMangerDesChips(node, weigth):
         if (weigth < n.weigth):
             onVaMangerDesChips(n, weigth + 1)
     
-        
+
+def testlist(nodelist):
+    node = nodelist[0]
+    for n in nodelist:
+        if (node.weigth != n.weigth):
+            return 1
+    return 0
+
 class inspectorPedro():
     direction = 0
     #direction = { UP, DOWN, LEFT, RIGHT ]
@@ -97,7 +105,10 @@ class inspectorPedro():
         self.pos = node.pos
     def move(self, fenetre, players):
         if (self.node.weigth != 0):
-            self.node = min(self.node.nodeList)
+            if (testlist(self.node.nodeList)):
+                self.node = min(self.node.nodeList)
+            else:
+                self.node = random.choice(self.node.nodeList)
             self.pos = self.node.pos
         fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
@@ -196,11 +207,11 @@ n.append(Node(5.0, 22.0, [n[47]]))
 n.append(Node(10.0, 22.0, [n[48], n[46], n[45]]))
 
 n.append(Node(12.0, 20.0, [n[45], n[49], n[5]]))
-
+n.append(Node(19.0, 16.0, [n[7]]))
 
 inspector = inspectorPedro(n[0])
 
-onVaMangerDesChips(n[47], 0)
+#onVaMangerDesChips(n[51], 0)
 
 pygame.font.init()
     
