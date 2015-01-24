@@ -62,7 +62,7 @@ class TestSprite(pygame.sprite.Sprite):
         self.image = self.images[self.index]
     def update(self):
         if (self.isPlaying == True):
-            self.index += 1
+            self.index += 1  
             if self.index >= len(self.images):
                 self.index = 0
             self.image = self.images[self.index]
@@ -206,7 +206,7 @@ proofs = [Proof("img/Preuves/briquet.png", 5.0, 5.0), Proof("img/Preuves/nes_64.
 background = pygame.image.load("img/Map/map.png").convert_alpha()
 menu_c = 1
 menu = pygame.image.load("img/UI/menu/main_menu.png").convert()
-new_rec = pygame.image.load("hand.png").convert_alpha()
+new_rec = pygame.image.load("img/UI/menu/hand.png").convert_alpha()
 merci = pygame.image.load("OPTION.png").convert()
 son = pygame.mixer.Sound("audio/sounds/move_menu.wav")
 son2 = pygame.mixer.Sound("audio/sounds/select_menu.wav")
