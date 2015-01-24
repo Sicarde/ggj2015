@@ -116,7 +116,10 @@ inspector = inspectorPedro()
 players = [Player()]
 proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
 background = pygame.image.load("map.png").convert_alpha()
-
+menu_c = 1
+menu = pygame.image.load("super_menu.png").convert()
+new_rec = pygame.image.load("hand.png").convert_alpha()
+merci = pygame.image.load("OPTION.png").convert()
 
 n = [Node(21.0, 2.0, [])]
 n.append(Node(21.0, 9.0, [n[0]]))
@@ -179,6 +182,47 @@ n.append(Node(5.0, 22.0, [n[47]]))
 n.append(Node(10.0, 22.0, [n[48], n[46], n[45]]))
 
 n.append(Node(12.0, 20.0, [n[45], n[49], n[5]]))
+
+speed = 2.5
+position_new_rec = new_rec.get_rect()
+position_new_rec.x = 650
+position_new_rec.y = 100
+fenetre.blit(menu, (0,0))
+fenetre.blit(new_rec, position_new_rec)
+while menu_c == 1:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            menu_c = 0
+        if event.type == KEYDOWN:
+            if event.key == K_DOWN:
+                position_new_rec.y = position_new_rec.y + 80
+                if position_new_rec.y >= 420:
+                    position_new_rec.y = 100
+            if event.key == K_UP:
+                position_new_rec.y = position_new_rec.y - 80
+                if position_new_rec.y <= 20:
+                    position_new_rec.y = 340
+            if position_new_rec.y == 100 and event.key == K_SPACE:
+                menu_c = 0
+            if position_new_rec.y == 260 and event.key == K_SPACE:
+                while menu_c == 1:
+                    for event in pygame.event.get():
+                        if event.type == QUIT:
+                            menu_c = 0
+                        if event.type == KEYDOWN:
+                            if event.key == K_ESCAPE:
+                                fenetre.blit(menu, (0,0))
+                                pygame.display.flip()
+                                menu_c = 0
+                        fenetre.blit(merci, (0,0))
+                        pygame.display.flip()
+                menu_c = 1
+            if position_new_rec.y == 340 and event.key == K_SPACE:
+                exit(0)
+                #MENU TAMERE                                                                                                                                                                  
+    fenetre.blit(menu, (0,0))
+    fenetre.blit(new_rec, position_new_rec)
+    pygame.display.flip()
 
 while continuer:
     for event in pygame.event.get():
