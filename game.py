@@ -193,6 +193,7 @@ continuer = 1
 inspector = inspectorPedro()
 players = [Player()]
 proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
+background = pygame.image.load("map.png").convert_alpha()
 while continuer:
     for event in pygame.event.get():
         if (event.type == QUIT):
@@ -201,6 +202,7 @@ while continuer:
             if (event.key == K_ESCAPE):
                 continuer = 0
     fenetre.fill((0, 0, 0))
+    fenetre.blit(background, (0, 0))
     inspector.move(fenetre, players)
     for player in players:
         fenetre.blit(block1bas, Rect(player.pos.x * 32, player.pos.y * 32, 32, 32))
