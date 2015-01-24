@@ -151,7 +151,7 @@ class inspectorPedro():
         self.direction = node
         self.pos = node.pos
     def move(self, fenetre, players):
-        if ((round(self.pos.x) == round(self.direction.pos.x)) and (round(self.pos.y) == round(self.direction.pos.y))):
+        if ((round(self.pos.x * 10) == round(self.direction.pos.x * 10)) and (round(self.pos.y * 10) == round(self.direction.pos.y * 10))):
             self.node = self.direction
             self.direction = min(self.node.nodeList)
         else:
@@ -218,7 +218,7 @@ n.append(Node(11.0, 2.0, [n[13]]))
 
 n.append(Node(5.0, 2.0, [n[14]]))
 n.append(Node(5.0, 7.0, [n[15], n[13]]))
-n.append(Node(6.0, 9.0, [n[16], n[13]]))
+n.append(Node(6.0, 9.0, [n[16], n[13], n[12]]))
 n.append(Node(6.0, 11.0, [n[17]]))
 n.append(Node(8.0, 11.0, [n[18]]))
 
@@ -347,7 +347,7 @@ while continuer:
         player.draw(fenetre)
     for proof in proofs:
         fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
-    time.sleep(0.01)
+#    time.sleep(0.01)
 #    for node in n:
 #        basicfont = pygame.font.SysFont(None, 48)
 #        text = basicfont.render(unicode(node.weigth), True, (255, 0, 0), (255, 255, 255))
