@@ -120,6 +120,6 @@ while continuer:
         fenetre.blit(block1bas, player.pos)
     for proof in proofs:
         fenetre.blit(proof.image, proof.pos)
-    time.sleep(1)
+    time.sleep(0.1)
 
     pygame.display.flip()
