@@ -64,14 +64,12 @@ class Player():
         proof.isPrinted = True
         proof = None
 
-class Node(object):
+class Node():
     def __init__(self, x, y, nodeList):
         self.pos = Position(x, y)
         self.nodeList = nodeList
-        i = 0
-        while i < len(nodeList):
-            nodeList[i].nodeList.append(self)
-            i += 1
+        for node in nodeList:
+            node.nodeList.append(self)
     def append(self, node):
         self.nodeList.append(node)
         node.nodeList.append(self)
@@ -120,7 +118,7 @@ proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
 background = pygame.image.load("map.png").convert_alpha()
 
 
-n = [Node(21.0, 2.0, None)]
+n = [Node(21.0, 2.0, [])]
 n.append(Node(21.0, 9.0, [n[0]]))
 n.append(Node(21.0, 11.0, [n[1]]))
 n.append(Node(14.0, 11.0, [n[2]]))
