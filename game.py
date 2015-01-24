@@ -210,7 +210,7 @@ n.append(Node(19.0, 18.0, [n[5], n[6]]))
 n.append(Node(27.0, 18.0, [n[7]]))
 n.append(Node(25.5, 15.0, [n[8], n[7], n[2]]))
 
-n.append(Node(27.0, 11.0, [n[9], n[2]]))
+n.append(Node(27.0, 11.0, [n[9], n[2], n[8]]))
 n.append(Node(29.0, 15.0, [n[10], n[9], n[8]]))
 n.append(Node(12.0, 9.0, [n[3]]))
 n.append(Node(11.0, 7.0, [n[12]]))
