@@ -35,20 +35,28 @@ lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
          [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
          [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ] ]
 
-spc = 2
+spc = 0.5
+
+class Position():
+    x = 5.0
+    y = 15.0
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
 class Proof():
     image = None
-    pos = Rect(3 * 32, 3 * 32, 32, 32)
     isPrinted = True
     def __init__(self, name):
+        self.pos = Position(5.0, 5.0)
         self.image = pygame.image.load(name).convert_alpha()
 
 class Player():
     color = "red"
-    pos = Rect(5 * 32, 14 * 32, 32, 32)
     proof = None
     isPaused = False
+    def __init__(self):
+        self.pos = Position(5.0, 15.0)
     def takeProof(self, proof):
         proof.isPrinted = false
     def putProof(self, proof):
@@ -57,59 +65,60 @@ class Player():
         proof = None
 
 class inspectorPedro():
-    pos = Rect(21 * 32, 29 * 32, 32, 32)
     direction = 0
     #direction = { UP, DOWN, LEFT, RIGHT }
     checkingPlayer = None
     goToRoom = False
     #room = { RED, GREEN, ORANGE, PURP } (7931)
+    def __init__(self):
+        self.pos = Position(21.0, 29.0)
     def move(self, fenetre, players):
         if (self.checkingPlayer != None):
             if (self.goToRoom == False):
                 self.goNearPlayer()
-                if ((self.checkingPlayer.pos.x - self.pos.x) / 32 > -1 and (self.checkingPlayer.pos.x - self.pos.x) / 32 < 1):
+                if ((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1):
                     self.lookFor(self.checkingPlayer)
             else:
                 self.goToPlayerRoom()
         else:
             if (self.direction == 0):
-                if (lala[self.pos.y / 32 - 1][self.pos.x / 32] == 1):
+                if (lala[int(self.pos.y) - 1][int(self.pos.x)] == 1):
                     self.changeDirection()
                 else:
-                    self.pos.y -= 32 / spc
+                    self.pos.y -= spc
             elif (self.direction == 1):
-                if (lala[self.pos.y / 32 + 1][self.pos.x / 32] == 1):
+                if (lala[int(self.pos.y) + 1][int(self.pos.x)] == 1):
                     self.changeDirection()
                 else:
-                    self.pos.y += 32 / spc
+                    self.pos.y += spc
             elif (self.direction == 2):
-                if (lala[self.pos.y / 32][self.pos.x / 32 - 1] == 1):
+                if (lala[int(self.pos.y)][int(self.pos.x) - 1] == 1):
                     self.changeDirection()
                 else:
-                    self.pos.x -= 32 / spc
+                    self.pos.x -= spc
             elif (self.direction == 0):
-                if (lala[self.pos.y / 32][self.pos.x / 32 + 1] == 1):
+                if (lala[int(self.pos.y)][int(self.pos.x) + 1] == 1):
                     self.changeDirection()
                 else:
-                    self.pos.x += 32 / spc
+                    self.pos.x += spc
             for player in players:
                 #add walls here
-                if ((player.pos.x - self.pos.x) / 32 > -2 and (player.pos.x - self.pos.x) / 32 < 2 and random.randint(0, 1) == 1):
+                if ((player.pos.x - self.pos.x) > -2 and (player.pos.x - self.pos.x) < 2 and random.randint(0, 1) == 1):
                     player.isPaused = True
                     self.checkingPlayer = player
                     break
-        fenetre.blit(block1bas, self.pos)
+        fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
-        if (not((self.checkingPlayer.pos.x - self.pos.x) / 32 > -1 and (self.checkingPlayer.pos.x - self.pos.x) / 32 < 1)):
+        if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
             if (self.checkingPlayer.pos.x > self.pos.x):
-                self.pos.x += 32 / spc
+                self.pos.x += spc
             else:
-                self.pos.x += 32 / spc
-        elif (not((self.checkingPlayer.pos.y - self.pos.y) / 32 > -1 and (self.checkingPlayer.pos.y - self.pos.y) / 32 < 1)):
+                self.pos.x += spc
+        elif (not((self.checkingPlayer.pos.y - self.pos.y) > -1 and (self.checkingPlayer.pos.y - self.pos.y) < 1)):
             if (self.checkingPlayer.pos.y > self.pos.y):
-                self.pos.y += 32 / spc
+                self.pos.y += spc
             else:
-                self.pos.y += 32 / spc
+                self.pos.y += spc
     def changeDirection(self):
         if (self.direction == 0):
             self.direction = 1
@@ -136,30 +145,30 @@ class inspectorPedro():
     def getOutOfRoom(self):
         if ((self.pos.x == 12 and self.pos.y  == 9) or (self.pos.x == 19 and self.pos.y == 9) or (self.pos.x == 27 and self.pos.y == 9) or (self.pos.x == 8 and self.pos.y == 15) or (self.pos.x == 31 and self.pos.y == 15) or (self.pos.x == 12 and self.pos.y == 20) or (self.pos.x == 19 and self.pos.y == 20) or (self.pos.x == 27 and self.pos.y == 20)):
             return 19, 15
-        else if (self.pos.y < 10):
+        elif (self.pos.y < 10):
             if (self.pos.x < 15):
                 return 12, 9
-            else if (self.pos.x < 24):
+            elif (self.pos.x < 24):
                 return 19, 9
             else:
                 return 27, 9
-        else if (self.pos.y < 19):
+        elif (self.pos.y < 19):
             if (self.pos.x < 9):
                 return 8, 15
-            else if (self.pos.x < 24):
+            elif (self.pos.x < 24):
                 return 19, 15
             else:
                 return 31, 15
         else:
             if (self.pos.x < 15):
                 return 12, 20
-            else if (self.pos.x < 24):
+            elif (self.pos.x < 24):
                 return 19, 20
             else:
                 return 27, 20
     def goToPlayerRoom(self):
         if (self.checkingPlayer.color == "red"):
-            
+            printf("red")
         elif (self.checkingPlayer.color == "green"):
             print("green")
         elif (self.checkingPlayer.color == "orange"):
@@ -194,8 +203,8 @@ while continuer:
     fenetre.fill((0, 0, 0))
     inspector.move(fenetre, players)
     for player in players:
-        fenetre.blit(block1bas, player.pos)
+        fenetre.blit(block1bas, Rect(player.pos.x * 32, player.pos.y * 32, 32, 32))
     for proof in proofs:
-        fenetre.blit(proof.image, proof.pos)
-    time.sleep(1/float(spc))
+        fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
+    time.sleep(spc)
     pygame.display.flip()
