@@ -43,6 +43,7 @@ lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 spc = 0.01
 
 class TestSprite(pygame.sprite.Sprite):
+    isPlaying = True
     def __init__(self):
         super(TestSprite, self).__init__()
         tmp = pygame.Surface((32, 32))
@@ -55,14 +56,22 @@ class TestSprite(pygame.sprite.Sprite):
         plop = pygame.image.load("block1bas.png").convert_alpha()
         tmp.blit(plop, (0, 0), (0, 0, 32, 32))
         self.images.append(tmp)
-        # assuming both images are 64x64 pixels
         self.index = 0
         self.image = self.images[self.index]
     def update(self):
-        self.index += 1
-        if self.index >= len(self.images):
+        if (self.isPlaying == True):
+            self.index += 1
+            if self.index >= len(self.images):
+                self.index = 0
+            self.image = self.images[self.index]
+    def pause(self):
+        if (self.isPlaying == True):
+            self.isPlaying = False
             self.index = 0
-        self.image = self.images[self.index]
+            self.image = self.images[self.index]
+    def play(self):
+        if (self.isPlaying == False):
+            self.isPlaying = True
 
 class Position():
     x = 5.0
@@ -85,6 +94,7 @@ class Player():
     def __init__(self):
         self.pos = Position(5.0, 15.0)
         self.Sprite = TestSprite()
+        self.Sprite.pause()
     def takeProof(self, proof):
         proof.isPrinted = false
     def putProof(self, proof):
@@ -294,25 +304,35 @@ while menu_c == 1:
     fenetre.blit(new_rec, position_new_rec)
     pygame.display.flip()
 
+pygame.key.set_repeat(100, 10)
+k = pygame.key.get_pressed()
+spc_player = 0.25
 while continuer:
     for event in pygame.event.get():
         if (event.type == QUIT):
             continuer = 0
         if (event.type == KEYDOWN):
+            keys = pygame.key.get_pressed()
             if (event.key == K_ESCAPE):
                 continuer = 0
-            if (event.key == K_LEFT):
+            if (keys[K_LEFT]):
                 if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1):
-                    players[0].pos.x -= spc
-            elif (event.key == K_RIGHT):
+                    players[0].pos.x -= spc_player
+                players[0].Sprite.play()
+            elif (keys[K_RIGHT]):
                 if (lala[int(players[0].pos.y)][int(math.ceil((players[0].pos.x + spc)))] != 1):
-                    players[0].pos.x += spc
-            elif (event.key == K_UP):
+                    players[0].pos.x += spc_player
+                players[0].Sprite.play()
+            elif (keys[K_UP]):
                 if (lala[int(players[0].pos.y - spc)][int(players[0].pos.x)] != 1):
-                    players[0].pos.y -= spc
-            elif (event.key == K_DOWN):
+                    players[0].pos.y -= spc_player
+                players[0].Sprite.play()
+            elif (keys[K_DOWN]):
                 if (lala[int(math.ceil((players[0].pos.y + spc)))][int(players[0].pos.x)] != 1):
-                    players[0].pos.y += spc
+                    players[0].pos.y += spc_player
+                players[0].Sprite.play()
+        if (event.type == KEYUP):
+            players[0].Sprite.pause()
     fenetre.fill((0, 0, 0))
     fenetre.blit(background, (0, 0))
     inspector.move(fenetre, players)
