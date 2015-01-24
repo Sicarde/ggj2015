@@ -45,12 +45,12 @@ spc = 0.01
 
 class TestSprite(pygame.sprite.Sprite):
     isPlaying = True
-    def __init__(self):
+    def __init__(self, name):
         super(TestSprite, self).__init__()
         tmp = pygame.Surface((32, 32))
         self.images = []
         self.rect = Rect(100, 100, 32, 32)
-        plop = pygame.image.load("img/Perso/red.png").convert_alpha()
+        plop = pygame.image.load(name).convert_alpha()
         tmp.blit(plop, (0, 0), (0, 0, 32, 32))
         tmp.set_colorkey(0)
         self.images.append(tmp)
@@ -96,15 +96,13 @@ class Player():
     isPaused = False
     def __init__(self):
         self.pos = Position(2.0, 15.0)
-        self.Sprite = TestSprite()
+        self.Sprite = TestSprite("img/Perso/red.png")
         self.Sprite.pause()
     def takeProof(self, proof):
         self.proof = proof
         self.proof.isPrinted = False
         self.haveProof = True
-        print("take")
     def putProof(self):
-        print("put")
         if (self.haveProof == True):
             self.proof.pos = Position(self.pos.x, self.pos.y)
             self.proof.isPrinted = True
@@ -158,7 +156,13 @@ class inspectorPedro():
         self.node = node
         self.direction = node
         self.pos = node.pos
-        self.img = pygame.image.load("img/Perso/pedro.png").convert_alpha()
+        self.Sprite = TestSprite("img/Perso/pedro.png")
+        self.Sprite.pause()
+    def draw(self, fenetre):
+        self.Sprite.update()
+        self.Sprite.rect.x = self.pos.x * 32
+        self.Sprite.rect.y = self.pos.y * 32
+        fenetre.blit(self.Sprite.image, self.Sprite.rect)
     def move(self, fenetre, players):
         if ((round(self.pos.x * 10) == round(self.direction.pos.x * 10)) and (round(self.pos.y * 10) == round(self.direction.pos.y * 10))):
             self.node = self.direction
@@ -171,7 +175,7 @@ class inspectorPedro():
         if (self.node.weigth == 0):
             clean(n)
             onVaMangerDesChips(n[random.choice([15, 22, 47, 42, 38, 31, 27, 0, 51])], 0)
-        fenetre.blit(self.img, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
+        self.draw(fenetre)
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
             if (self.checkingPlayer.pos.x > self.pos.x):
