@@ -129,7 +129,7 @@ block1bas = pygame.image.load("block1bas.png").convert_alpha()
 continuer = 1
 players = [Player()]
 proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
-background = pygame.image.load("map.png").convert_alpha()
+background = pygame.image.load("img/Map/map.png").convert_alpha()
 menu_c = 1
 menu = pygame.image.load("super_menu.png").convert()
 new_rec = pygame.image.load("hand.png").convert_alpha()
@@ -200,7 +200,7 @@ n.append(Node(12.0, 20.0, [n[45], n[49], n[5]]))
 
 inspector = inspectorPedro(n[0])
 
-onVaMangerDesChips(n[0], 0)
+onVaMangerDesChips(n[47], 0)
 
 pygame.font.init()
     
