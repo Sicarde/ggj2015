@@ -39,6 +39,28 @@ lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 
 spc = 0.5
 
+class TestSprite(pygame.sprite.Sprite):
+    def __init__(self):
+        super(TestSprite, self).__init__()
+        tmp = pygame.Surface((32, 32))
+        self.images = []
+        self.rect = Rect(100, 100, 32, 32)
+        plop = pygame.image.load("img/Perso/red.png").convert_alpha()
+        tmp.blit(plop, (0, 0), (0, 0, 32, 32))
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        plop = pygame.image.load("block1bas.png").convert_alpha()
+        tmp.blit(plop, (0, 0), (0, 0, 32, 32))
+        self.images.append(tmp)
+        # assuming both images are 64x64 pixels
+        self.index = 0
+        self.image = self.images[self.index]
+    def update(self):
+        self.index += 1
+        if self.index >= len(self.images):
+            self.index = 0
+        self.image = self.images[self.index]
+
 class Position():
     x = 5.0
     y = 15.0
@@ -59,12 +81,18 @@ class Player():
     isPaused = False
     def __init__(self):
         self.pos = Position(5.0, 15.0)
+        self.Sprite = TestSprite()
     def takeProof(self, proof):
         proof.isPrinted = false
     def putProof(self, proof):
         proof.pos = self.pos
         proof.isPrinted = True
         proof = None
+    def draw(self, fenetre):
+        self.Sprite.update()
+        self.Sprite.rect.x = self.pos.x * 32
+        self.Sprite.rect.y = self.pos.y * 32
+        fenetre.blit(self.Sprite.image, self.Sprite.rect)
 
 class Node():
     weigth = 50
@@ -267,7 +295,8 @@ while continuer:
     fenetre.blit(background, (0, 0))
     inspector.move(fenetre, players)
     for player in players:
-        fenetre.blit(block1bas, Rect(player.pos.x * 32, player.pos.y * 32, 32, 32))
+        player.draw(fenetre)
+        #fenetre.blit(block1bas, Rect(player.pos.x * 32, player.pos.y * 32, 32, 32))
     for proof in proofs:
         fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
     time.sleep(spc)
