@@ -51,10 +51,11 @@ class TestSprite(pygame.sprite.Sprite):
         self.rect = Rect(100, 100, 32, 32)
         plop = pygame.image.load("img/Perso/red.png").convert_alpha()
         tmp.blit(plop, (0, 0), (0, 0, 32, 32))
+        tmp.set_colorkey(0)
         self.images.append(tmp)
         tmp = pygame.Surface((32, 32))
-        plop = pygame.image.load("block1bas.png").convert_alpha()
-        tmp.blit(plop, (0, 0), (0, 0, 32, 32))
+        tmp.blit(plop, (0, 0), (32, 0, 32, 32))
+        tmp.set_colorkey(0)
         self.images.append(tmp)
         self.index = 0
         self.image = self.images[self.index]
