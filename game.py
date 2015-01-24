@@ -7,6 +7,7 @@ import time
 import math
 from math import exp, expm1
 from pygame.locals import *
+pygame.mixer.init()
 
 lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
          [ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 ],
@@ -198,6 +199,8 @@ menu_c = 1
 menu = pygame.image.load("super_menu.png").convert()
 new_rec = pygame.image.load("hand.png").convert_alpha()
 merci = pygame.image.load("OPTION.png").convert()
+son = pygame.mixer.Sound("audio/sounds/move_menu.wav")
+son2 = pygame.mixer.Sound("audio/sounds/select_menu.wav")
 
 n = [Node(19.0, 2.0, [])]
 n.append(Node(19.0, 9.0, [n[0]]))
@@ -280,16 +283,20 @@ while menu_c == 1:
             menu_c = 0
         if event.type == KEYDOWN:
             if event.key == K_DOWN:
+                son.play()
                 position_new_rec.y = position_new_rec.y + 80
                 if position_new_rec.y >= 420:
                     position_new_rec.y = 100
             if event.key == K_UP:
+                son.play()
                 position_new_rec.y = position_new_rec.y - 80
                 if position_new_rec.y <= 20:
                     position_new_rec.y = 340
             if position_new_rec.y == 100 and event.key == K_SPACE:
                 menu_c = 0
+                son2.play()
             if position_new_rec.y == 260 and event.key == K_SPACE:
+                son2.play()
                 while menu_c == 1:
                     for event in pygame.event.get():
                         if event.type == QUIT:
