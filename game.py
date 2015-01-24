@@ -161,7 +161,7 @@ class inspectorPedro():
             self.pos.y -= vecteur.y / 10
         if (self.node.weigth == 0):
             clean(n)
-            onVaMangerDesChips(n[random.randint(0, 51)], 0)
+            onVaMangerDesChips(n[random.choice([15, 22, 47, 42, 38, 31, 27, 0, 51])], 0)
         fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
