@@ -89,12 +89,13 @@ class Proof():
         self.image = pygame.image.load(name).convert_alpha()
 
 class Player():
-    color = "red"
+    rotate = 0
     proof = None
     isPaused = False
-    def __init__(self):
+    def __init__(self, joystick):
         self.pos = Position(2.0, 15.0)
         self.Sprite = TestSprite()
+        self.joystick = joystick
         self.Sprite.pause()
     def takeProof(self, proof):
         proof.isPrinted = false
@@ -107,6 +108,7 @@ class Player():
         self.Sprite.rect.x = self.pos.x * 32
         self.Sprite.rect.y = self.pos.y * 32
         fenetre.blit(self.Sprite.image, self.Sprite.rect)
+#    def move
 
 class Node():
     weigth = 50
@@ -191,7 +193,12 @@ fenetre = pygame.display.set_mode(taille)
 block1bas = pygame.image.load("block1bas.png").convert_alpha()
 
 continuer = 1
-players = [Player()]
+pygame.joystick.init()
+joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+for joy in joysticks:
+    joy.init()
+
+players = [Player(joysticks[0])]
 proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
 background = pygame.image.load("img/Map/map.png").convert_alpha()
 menu_c = 1
@@ -268,6 +275,11 @@ onVaMangerDesChips(n[51], 0)
 
 pygame.font.init()
     
+
+
+
+
+
 speed = 2.5
 position_new_rec = new_rec.get_rect()
 position_new_rec.x = 650
@@ -304,6 +316,44 @@ while menu_c == 1:
                 menu_c = 1
             if position_new_rec.y == 340 and event.key == K_SPACE:
                 exit(0)
+        if event.type == pygame.JOYBUTTONDOWN:
+            if position_new_rec.y == 100 and event.button == 0:
+                menu_c = 0
+            if position_new_rec.y == 260 and event.button == 0:
+                while menu_c == 1:
+                    for event in pygame.event.get():
+                        if event.type == QUIT:
+                            menu_c = 0
+                        if event.type == KEYDOWN:
+                            if event.key == K_ESCAPE:
+                                fenetre.blit(menu, (0,0))
+                                pygame.display.flip()
+                                menu_c = 0
+                        fenetre.blit(merci, (0,0))
+                        pygame.display.flip()
+                menu_c = 1
+            if position_new_rec.y == 340 and event.button == 0:
+                exit(0)
+        if event.type == pygame.JOYHATMOTION:
+            if event.value[1] < 0 :
+                position_new_rec.y = position_new_rec.y + 80
+                if position_new_rec.y >= 420:
+                    position_new_rec.y = 100
+            if event.value[1] > 0:
+                position_new_rec.y = position_new_rec.y - 80
+                if position_new_rec.y <= 20:
+                    position_new_rec.y = 340
+        if event.type == pygame.JOYAXISMOTION:
+            if event.axis == 1 and event.value < -0.8:
+                time.sleep(0.2)
+                position_new_rec.y = position_new_rec.y + 80
+                if position_new_rec.y >= 420:
+                    position_new_rec.y = 100
+            if event.axis == 1 and event.value > 0.8:
+                time.sleep(0.2)
+                position_new_rec.y = position_new_rec.y - 80
+                if position_new_rec.y <= 20:
+                    position_new_rec.y = 340
     fenetre.blit(menu, (0,0))
     fenetre.blit(new_rec, position_new_rec)
     pygame.display.flip()
