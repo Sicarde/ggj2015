@@ -196,7 +196,7 @@ players = [Player()]
 proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
 background = pygame.image.load("img/Map/map.png").convert_alpha()
 menu_c = 1
-menu = pygame.image.load("super_menu.png").convert()
+menu = pygame.image.load("img/UI/menu/main_menu.png").convert()
 new_rec = pygame.image.load("hand.png").convert_alpha()
 merci = pygame.image.load("OPTION.png").convert()
 son = pygame.mixer.Sound("audio/sounds/move_menu.wav")
@@ -273,8 +273,8 @@ pygame.font.init()
     
 speed = 2.5
 position_new_rec = new_rec.get_rect()
-position_new_rec.x = 650
-position_new_rec.y = 100
+position_new_rec.x = 200
+position_new_rec.y = 250
 fenetre.blit(menu, (0,0))
 fenetre.blit(new_rec, position_new_rec)
 while menu_c == 1:
@@ -284,18 +284,18 @@ while menu_c == 1:
         if event.type == KEYDOWN:
             if event.key == K_DOWN:
                 son.play()
-                position_new_rec.y = position_new_rec.y + 80
-                if position_new_rec.y >= 420:
-                    position_new_rec.y = 100
+                position_new_rec.y = position_new_rec.y + 120
+                if position_new_rec.y >= 620:
+                    position_new_rec.y = 250
             if event.key == K_UP:
                 son.play()
-                position_new_rec.y = position_new_rec.y - 80
-                if position_new_rec.y <= 20:
-                    position_new_rec.y = 340
-            if position_new_rec.y == 100 and event.key == K_SPACE:
+                position_new_rec.y = position_new_rec.y - 120
+                if position_new_rec.y <= 220:
+                    position_new_rec.y = 610
+            if position_new_rec.y == 250 and event.key == K_SPACE:
                 menu_c = 0
                 son2.play()
-            if position_new_rec.y == 260 and event.key == K_SPACE:
+            if position_new_rec.y == 610 and event.key == K_SPACE:
                 son2.play()
                 while menu_c == 1:
                     for event in pygame.event.get():
@@ -309,7 +309,7 @@ while menu_c == 1:
                         fenetre.blit(merci, (0,0))
                         pygame.display.flip()
                 menu_c = 1
-            if position_new_rec.y == 340 and event.key == K_SPACE:
+            if position_new_rec.y == 490 and event.key == K_SPACE:
                 exit(0)
     fenetre.blit(menu, (0,0))
     fenetre.blit(new_rec, position_new_rec)
