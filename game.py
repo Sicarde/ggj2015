@@ -64,49 +64,26 @@ class Player():
         proof.isPrinted = True
         proof = None
 
+class Node():
+    def __init__(self, x, y, nodeList):
+        self.pos = Position(x, y)
+        self.nodeList = nodeList
+        for node in nodeList:
+            node.nodeList.append(self)
+    def append(self, node):
+        self.nodeList.append(node)
+        node.nodeList.append(self)
+        
 class inspectorPedro():
     direction = 0
     #direction = { UP, DOWN, LEFT, RIGHT }
     checkingPlayer = None
-    goToRoom = False
-    #room = { RED, GREEN, ORANGE, PURP } (7931)
+    goToRoom = 0
+    room = 0
+    #room = { IDLE, GET OUT, RED, GREEN, ORANGE, PURP } (7931)
     def __init__(self):
-        self.pos = Position(21.0, 29.0)
+        self.pos = Position(21.0, 2.0)
     def move(self, fenetre, players):
-        if (self.checkingPlayer != None):
-            if (self.goToRoom == False):
-                self.goNearPlayer()
-                if ((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1):
-                    self.lookFor(self.checkingPlayer)
-            else:
-                self.goToPlayerRoom()
-        else:
-            if (self.direction == 0):
-                if (lala[int(self.pos.y) - 1][int(self.pos.x)] == 1):
-                    self.changeDirection()
-                else:
-                    self.pos.y -= spc
-            elif (self.direction == 1):
-                if (lala[int(self.pos.y) + 1][int(self.pos.x)] == 1):
-                    self.changeDirection()
-                else:
-                    self.pos.y += spc
-            elif (self.direction == 2):
-                if (lala[int(self.pos.y)][int(self.pos.x) - 1] == 1):
-                    self.changeDirection()
-                else:
-                    self.pos.x -= spc
-            elif (self.direction == 0):
-                if (lala[int(self.pos.y)][int(self.pos.x) + 1] == 1):
-                    self.changeDirection()
-                else:
-                    self.pos.x += spc
-            for player in players:
-                #add walls here
-                if ((player.pos.x - self.pos.x) > -2 and (player.pos.x - self.pos.x) < 2 and random.randint(0, 1) == 1):
-                    player.isPaused = True
-                    self.checkingPlayer = player
-                    break
         fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
@@ -119,66 +96,11 @@ class inspectorPedro():
                 self.pos.y += spc
             else:
                 self.pos.y += spc
-    def changeDirection(self):
-        if (self.direction == 0):
-            self.direction = 1
-        elif (self.direction == 1):
-            self.direction = 0
-        elif (self.direction == 2):
-            self.direction = 3
-        elif (self.direction == 3):
-            self.direction = 2
-    def goToCell(self, a, b):
-        if ((a == self.pos.x) and (b == self.pos.y)):
-            return 1
-        if (abs(a - self.pos.x) > abs(b - self.pos.y)):
-            if ((a - self.pos.x) > 0):
-                self.direction = 2
-            else:
-                self.direction = 3
-        else:
-            if ((b - self.pos.y) > 0):
-                self.direction = 1
-            else:
-                self.direction = 0
-        return 0
-    def getOutOfRoom(self):
-        if ((self.pos.x == 12 and self.pos.y  == 9) or (self.pos.x == 19 and self.pos.y == 9) or (self.pos.x == 27 and self.pos.y == 9) or (self.pos.x == 8 and self.pos.y == 15) or (self.pos.x == 31 and self.pos.y == 15) or (self.pos.x == 12 and self.pos.y == 20) or (self.pos.x == 19 and self.pos.y == 20) or (self.pos.x == 27 and self.pos.y == 20)):
-            return 19, 15
-        elif (self.pos.y < 10):
-            if (self.pos.x < 15):
-                return 12, 9
-            elif (self.pos.x < 24):
-                return 19, 9
-            else:
-                return 27, 9
-        elif (self.pos.y < 19):
-            if (self.pos.x < 9):
-                return 8, 15
-            elif (self.pos.x < 24):
-                return 19, 15
-            else:
-                return 31, 15
-        else:
-            if (self.pos.x < 15):
-                return 12, 20
-            elif (self.pos.x < 24):
-                return 19, 20
-            else:
-                return 27, 20
-    def goToPlayerRoom(self):
-        if (self.checkingPlayer.color == "red"):
-            printf("red")
-        elif (self.checkingPlayer.color == "green"):
-            print("green")
-        elif (self.checkingPlayer.color == "orange"):
-            print("orange")
-        elif (self.checkingPlayer.color == "purple"):
-            print("purple")
+        
     def lookFor(self, player):
         if (player.proof != None):
             self.goToPlayerRoom()
-            #tutulu UNE PREUVE HAHAHAHA LE JEU
+            #tutulu UNE PREUVE
             return
         else:
             player.isPaused = False
@@ -194,6 +116,70 @@ inspector = inspectorPedro()
 players = [Player()]
 proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
 background = pygame.image.load("map.png").convert_alpha()
+
+
+n = {Node(21.0, 2.0, None)}
+n.append(Node(21.0, 9.0, {n[0]}))
+n.append(Node(21.0, 11.0, {n[1]}))
+n.append(Node(14.0, 11.0, {n[2]}))
+n.append(Node(10.0, 15.0, {n[3]}))
+
+n.append(Node(12.0, 18.0, {n[4], n[3]}))
+n.append(Node(15.0, 15.0, {n[2], n[3], n[4], n[5]}))
+n.append(Node(19.0, 18.0, {n[5], n[6]}))
+n.append(Node(27.0, 18.0, {n[7]}))
+n.append(Node(24.0, 15.0, {n[8], n[7], n[2]}))
+
+n.append(Node(27.0, 11.0, {n[9], n[2]}))
+n.append(Node(29.0, 15.0, {n[10], n[9], n[8]}))
+n.append(Node(7.0, 9.0, {n[3]}))
+n.append(Node(10.0, 7.0, {n[12]}))
+n.append(Node(11.0, 3.0, {n[13]}))
+
+n.append(Node(5.0, 3.0, {n[14]}))
+n.append(Node(5.0, 7.0, {n[15], n[13]}))
+n.append(Node(6.0, 9.0, {n[16], n[13]}))
+n.append(Node(6.0, 11.0, {n[17]}))
+n.append(Node(8.0, 11.0, {n[18]}))
+
+n.append(Node(8.0, 15.0, {n[19]}))
+n.append(Node(8.0, 18.0, {n[20]}))
+n.append(Node(1.0, 18.0, {n[21]}))
+n.append(Node(1.0, 11.0, {n[22], n[18]}))
+n.append(Node(27.0, 9.0, {n[10]}))
+
+n.append(Node(29.0, 7.0, {n[24]}))
+n.append(Node(28.0, 3.0, {n[25]}))
+n.append(Node(34.0, 3.0, {n[26]}))
+n.append(Node(34.0, 7.0, {n[27], n[25]}))
+n.append(Node(33.0, 9.0, {n[28], n[25]}))
+
+n.append(Node(33.0, 11.0, {n[29]}))
+n.append(Node(37.0, 13.0, {n[30]}))
+n.append(Node(36.0, 18.0, {n[31]}))
+n.append(Node(31.0, 18.0, {n[32]}))
+n.append(Node(31.0, 15.0, {n[33], n[31], n[30], n[11]}))
+
+n.append(Node(27.0, 20.0, {n[8]}))
+n.append(Node(28.0, 22.0, {n[35]}))
+n.append(Node(34.0, 22.0, {n[36]}))
+n.append(Node(34.0, 27.0, {n[37]}))
+n.append(Node(27.0, 27.0, {n[38], n[36]}))
+
+n.append(Node(25.0, 24.0, {n[39], n[36], n[35]}))
+n.append(Node(23.0, 24.0, {n[40]}))
+n.append(Node(20.0, 27.0, {n[41]}))
+n.append(Node(16.0, 24.0, {n[42], n[41]}))
+n.append(Node(19.0, 20.0, {n[43], n[42], n[41], n[7]}))
+
+n.append(Node(14.0, 24.0, {n[43]}))
+n.append(Node(11.0, 27.0, {n[45]}))
+n.append(Node(5.0, 27.0, {n[46]}))
+n.append(Node(5.0, 22.0, {n[47]}))
+n.append(Node(10.0, 22.0, {n[48], n[46], n[45]}))
+
+n.append(Node(12.0, 20.0, {n[45], n[49], n[5]}))
+
 while continuer:
     for event in pygame.event.get():
         if (event.type == QUIT):
