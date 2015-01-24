@@ -4,6 +4,7 @@ import random
 import pygame
 import sys
 import time
+import math
 from pygame.locals import *
 
 lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
@@ -37,7 +38,7 @@ lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
          [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
          [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ] ]
 
-spc = 0.5
+spc = 0.25
 
 class TestSprite(pygame.sprite.Sprite):
     def __init__(self):
@@ -279,7 +280,6 @@ while menu_c == 1:
                 menu_c = 1
             if position_new_rec.y == 340 and event.key == K_SPACE:
                 exit(0)
-                #MENU TAMERE                                                                                                                                                                  
     fenetre.blit(menu, (0,0))
     fenetre.blit(new_rec, position_new_rec)
     pygame.display.flip()
@@ -291,15 +291,26 @@ while continuer:
         if (event.type == KEYDOWN):
             if (event.key == K_ESCAPE):
                 continuer = 0
+            if (event.key == K_LEFT):
+                if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1):
+                    players[0].pos.x -= spc
+            elif (event.key == K_RIGHT):
+                if (lala[int(players[0].pos.y)][int(math.ceil((players[0].pos.x + spc)))] != 1):
+                    players[0].pos.x += spc
+            elif (event.key == K_UP):
+                if (lala[int(players[0].pos.y - spc)][int(players[0].pos.x)] != 1):
+                    players[0].pos.y -= spc
+            elif (event.key == K_DOWN):
+                if (lala[int(math.ceil((players[0].pos.y + spc)))][int(players[0].pos.x)] != 1):
+                    players[0].pos.y += spc
     fenetre.fill((0, 0, 0))
     fenetre.blit(background, (0, 0))
     inspector.move(fenetre, players)
     for player in players:
         player.draw(fenetre)
-        #fenetre.blit(block1bas, Rect(player.pos.x * 32, player.pos.y * 32, 32, 32))
     for proof in proofs:
         fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
-    time.sleep(spc)
+    time.sleep(0.25)
 #    for node in n:
 #        basicfont = pygame.font.SysFont(None, 48)
 #        text = basicfont.render(unicode(node.weigth), True, (255, 0, 0), (255, 255, 255))
