@@ -84,7 +84,8 @@ class Position():
 
 class Proof():
     image = None
-    isPrinted = True
+    isPrinted = False
+    isOnFloor = True
     def __init__(self, name, x, y):
         self.pos = Position(x, y)
         self.image = pygame.image.load(name).convert_alpha()
@@ -101,12 +102,14 @@ class Player():
     def takeProof(self, proof):
         self.proof = proof
         self.proof.isPrinted = False
+        self.proof.isOnFloor = False
         self.haveProof = True
     def putProof(self):
         if (self.haveProof == True):
             self.proof.pos = Position(self.pos.x, self.pos.y)
             self.proof.isPrinted = True
             self.haveProof = False
+            self.proof.isOnFloor = True
     def draw(self, fenetre):
         self.Sprite.update()
         self.Sprite.rect.x = self.pos.x * 32
@@ -143,6 +146,13 @@ def testlist(nodelist):
 def clean(nlist):
     for n in nlist:
         n.weigth = 50
+
+def checkProofNearby(players, proofs):
+    for player in players:
+        for proof in proofs:
+            if (proof.isPrinted == False and proof.isOnFloor == True):
+                if (proof.pos.x - player.pos.x > -2 and proof.pos.y - player.pos.y > -2 and proof.pos.x - player.pos.x < 2 and proof.pos.y - player.pos.y < 2):
+                    proof.isPrinted = True
 
 class inspectorPedro():
     direction = None
@@ -202,7 +212,15 @@ fenetre = pygame.display.set_mode(taille)
 
 continuer = 1
 players = [Player()]
-proofs = [Proof("img/Preuves/briquet.png", 5.0, 5.0), Proof("img/Preuves/nes_64.png", 35.0, 2.0), Proof("img/Preuves/rope_32.png", 13.0, 13.0), Proof("img/Preuves/cuillere.png", 5.0, 26.0), Proof("img/Preuves/cut_64.png", 38.0, 28.0)]
+proofsPaths = [ "img/Preuves/briquet.png", "img/Preuves/nes_64.png", "img/Preuves/rope_32.png", "img/Preuves/cuillere.png", "img/Preuves/cut_64.png" ]
+proofs = []
+for proofPath in proofsPaths:
+    x = random.randint(1, 28)
+    y = random.randint(1, 38)
+    while (lala[x][y] != 0):
+        x = random.randint(1, 28)
+        y = random.randint(1, 38)
+    proofs.append(Proof(proofPath, y, x))
 background = pygame.image.load("img/Map/map.png").convert_alpha()
 menu_c = 1
 menu = pygame.image.load("img/UI/menu/main_menu.png").convert()
@@ -367,6 +385,7 @@ while continuer:
                     if (lala[int(math.ceil((players[0].pos.y + spc)))][int(math.ceil(players[0].pos.x))] != 1 and lala[int(players[0].pos.y + spc)][int(math.ceil(players[0].pos.x))] != 1):
                         players[0].pos.y += spc_player
                 players[0].Sprite.play()
+            checkProofNearby(players, proofs)
         if (event.type == KEYUP):
             players[0].Sprite.pause()
     fenetre.fill((0, 0, 0))
