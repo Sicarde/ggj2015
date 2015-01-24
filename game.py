@@ -35,6 +35,8 @@ lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
          [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
          [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ] ]
 
+spc = 2
+
 class Proof():
     image = None
     pos = Rect(3 * 32, 3 * 32, 32, 32)
@@ -46,6 +48,7 @@ class Player():
     color = "red"
     pos = Rect(5 * 32, 14 * 32, 32, 32)
     proof = None
+    isPaused = False
     def takeProof(self, proof):
         proof.isPrinted = false
     def putProof(self, proof):
@@ -54,37 +57,59 @@ class Player():
         proof = None
 
 class inspectorPedro():
-    pos = Rect(20 * 32, 29 * 32, 32, 32)
+    pos = Rect(21 * 32, 29 * 32, 32, 32)
     direction = 0
     #direction = { UP, DOWN, LEFT, RIGHT }
+    checkingPlayer = None
+    goToRoom = False
+    #room = { RED, GREEN, ORANGE, PURP } (7931)
     def move(self, fenetre, players):
-        if (self.direction == 0):
-            if (lala[self.pos.y / 32 - 1][self.pos.x / 32] == 1):
-                print(self.pos.y/32)
-                print(self.pos.x/32)
-                print(lala[self.pos.y / 32 - 1][self.pos.x / 32])
-                self.changeDirection()
+        if (self.checkingPlayer != None):
+            if (self.goToRoom == False):
+                self.goNearPlayer()
+                if ((self.checkingPlayer.pos.x - self.pos.x) / 32 > -1 and (self.checkingPlayer.pos.x - self.pos.x) / 32 < 1):
+                    self.lookFor(self.checkingPlayer)
             else:
-                self.pos.y -= 32
-        elif (self.direction == 1):
-            if (lala[self.pos.y / 32 + 1][self.pos.x / 32] == 1):
-                self.changeDirection()
-            else:
-                self.pos.y += 32
-        elif (self.direction == 2):
-            if (lala[self.pos.y / 32][self.pos.x / 32 - 1] == 1):
-                self.changeDirection()
-            else:
-                self.pos.x -= 32
-        elif (self.direction == 0):
-            if (lala[self.pos.y / 32][self.pos.x / 32 + 1] == 1):
-                self.changeDirection()
-            else:
-                self.pos.x += 32
-        for player in players:
-            if (player.pos.x / 32 - self.pos.x / 32 > -2 and player.pos.x / 32 - self.pos.x / 32 < 2 and random.randint(0, 1) == 1):
-                lookFor(player)
+                self.goToPlayerRoom()
+        else:
+            if (self.direction == 0):
+                if (lala[self.pos.y / 32 - 1][self.pos.x / 32] == 1):
+                    self.changeDirection()
+                else:
+                    self.pos.y -= 32 / spc
+            elif (self.direction == 1):
+                if (lala[self.pos.y / 32 + 1][self.pos.x / 32] == 1):
+                    self.changeDirection()
+                else:
+                    self.pos.y += 32 / spc
+            elif (self.direction == 2):
+                if (lala[self.pos.y / 32][self.pos.x / 32 - 1] == 1):
+                    self.changeDirection()
+                else:
+                    self.pos.x -= 32 / spc
+            elif (self.direction == 0):
+                if (lala[self.pos.y / 32][self.pos.x / 32 + 1] == 1):
+                    self.changeDirection()
+                else:
+                    self.pos.x += 32 / spc
+            for player in players:
+                #add walls here
+                if ((player.pos.x - self.pos.x) / 32 > -2 and (player.pos.x - self.pos.x) / 32 < 2 and random.randint(0, 1) == 1):
+                    player.isPaused = True
+                    self.checkingPlayer = player
+                    break
         fenetre.blit(block1bas, self.pos)
+    def goNearPlayer(self):
+        if (!((self.checkingPlayer.pos.x - self.pos.x) / 32 > -1 and (self.checkingPlayer.pos.x - self.pos.x) / 32 < 1)):
+            if (self.checkingPlayer.pos.x > self.pos.x):
+                self.pos.x += 32 / spc
+            else:
+                self.pos.x += 32 / spc
+        elif (!((self.checkingPlayer.pos.y - self.pos.y) / 32 > -1 and (self.checkingPlayer.pos.y - self.pos.y) / 32 < 1)):
+            if (self.checkingPlayer.pos.y > self.pos.y):
+                self.pos.y += 32 / spc
+            else:
+                self.pos.y += 32 / spc
     def changeDirection(self):
         if (self.direction == 0):
             self.direction = 1
@@ -94,11 +119,18 @@ class inspectorPedro():
             self.direction = 3
         elif (self.direction == 3):
             self.direction = 2
+    def gotToPlayerRoom(self):
+        if (self.checkingPlayer.color == "red"):
+        elif (self.checkingPlayer.color == "green"):
+        elif (self.checkingPlayer.color == ""):
+        elif (self.checkingPlayer.color == ""):
     def lookFor(self, player):
         if (player.proof != None):
+            self.goToPlayerRoom()
             #tutulu UNE PREUVE HAHAHAHA LE JEU
             return
-
+        else:
+            player.isPaused = False
 
 taille = hauteur, largeur = 1920, 1080
 
@@ -114,12 +146,15 @@ while continuer:
     for event in pygame.event.get():
         if (event.type == QUIT):
             continuer = 0
+        if (event.type == KEYDOWN):
+            if (event.key == K_ESCAPE):
+                continuer = 0
     fenetre.fill((0, 0, 0))
     inspector.move(fenetre, players)
     for player in players:
         fenetre.blit(block1bas, player.pos)
     for proof in proofs:
         fenetre.blit(proof.image, proof.pos)
-    time.sleep(1)
+    time.sleep(1/float(spc))
 
     pygame.display.flip()
