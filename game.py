@@ -4,6 +4,8 @@ import random
 import pygame
 import sys
 import time
+import math
+from math import exp, expm1
 from pygame.locals import *
 
 lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
@@ -37,7 +39,7 @@ lala = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
          [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
          [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ] ]
 
-spc = 0.5
+spc = 0.01
 
 class TestSprite(pygame.sprite.Sprite):
     def __init__(self):
@@ -122,22 +124,30 @@ def testlist(nodelist):
     return 0
 
 class inspectorPedro():
-    direction = 0
+    direction = None
     #direction = { UP, DOWN, LEFT, RIGHT ]
     checkingPlayer = None
     goToRoom = 0
     room = 0
+    moving = 0
     #room = { IDLE, GET OUT, RED, GREEN, ORANGE, PURP ] (7931)
     def __init__(self, node):
         self.node = node
+        self.direction = node
         self.pos = node.pos
     def move(self, fenetre, players):
-        if (self.node.weigth != 0):
-            if (testlist(self.node.nodeList)):
-                self.node = min(self.node.nodeList)
-            else:
-                self.node = random.choice(self.node.nodeList)
-            self.pos = self.node.pos
+        if ((round(self.pos.x) == round(self.direction.pos.x)) and (round(self.pos.y) == round(self.direction.pos.y))):
+            self.node = self.direction
+            if (self.node.weigth != 0):
+                if (testlist(self.node.nodeList)):
+                    self.direction = min(self.node.nodeList)
+                else:
+                    self.direction = random.choice(self.node.nodeList)
+        else:
+            lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
+            vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
+            self.pos.x -= vecteur.x / 10
+            self.pos.y -= vecteur.y / 10
         fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
@@ -181,18 +191,18 @@ n.append(Node(12.0, 11.0, [n[2]]))
 n.append(Node(10.0, 15.0, [n[3]]))
 
 n.append(Node(12.0, 18.0, [n[4], n[3]]))
-n.append(Node(15.0, 15.0, [n[2], n[3], n[4], n[5]]))
+n.append(Node(13.5, 15.0, [n[2], n[3], n[4], n[5]]))
 n.append(Node(19.0, 18.0, [n[5], n[6]]))
 n.append(Node(27.0, 18.0, [n[7]]))
-n.append(Node(24.0, 15.0, [n[8], n[7], n[2]]))
+n.append(Node(25.5, 15.0, [n[8], n[7], n[2]]))
 
 n.append(Node(27.0, 11.0, [n[9], n[2]]))
 n.append(Node(29.0, 15.0, [n[10], n[9], n[8]]))
 n.append(Node(12.0, 9.0, [n[3]]))
-n.append(Node(10.0, 7.0, [n[12]]))
-n.append(Node(11.0, 3.0, [n[13]]))
+n.append(Node(11.0, 7.0, [n[12]]))
+n.append(Node(11.0, 2.0, [n[13]]))
 
-n.append(Node(5.0, 3.0, [n[14]]))
+n.append(Node(5.0, 2.0, [n[14]]))
 n.append(Node(5.0, 7.0, [n[15], n[13]]))
 n.append(Node(6.0, 9.0, [n[16], n[13]]))
 n.append(Node(6.0, 11.0, [n[17]]))
@@ -204,9 +214,9 @@ n.append(Node(1.0, 18.0, [n[21]]))
 n.append(Node(1.0, 11.0, [n[22], n[18]]))
 n.append(Node(27.0, 9.0, [n[10]]))
 
-n.append(Node(29.0, 7.0, [n[24]]))
-n.append(Node(28.0, 3.0, [n[25]]))
-n.append(Node(34.0, 3.0, [n[26]]))
+n.append(Node(28.0, 7.0, [n[24]]))
+n.append(Node(28.0, 2.0, [n[25]]))
+n.append(Node(34.0, 2.0, [n[26]]))
 n.append(Node(34.0, 7.0, [n[27], n[25]]))
 n.append(Node(33.0, 9.0, [n[28], n[25]]))
 
