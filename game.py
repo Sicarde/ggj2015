@@ -85,24 +85,30 @@ class Position():
 class Proof():
     image = None
     isPrinted = True
-    def __init__(self, name):
-        self.pos = Position(5.0, 5.0)
+    def __init__(self, name, x, y):
+        self.pos = Position(x, y)
         self.image = pygame.image.load(name).convert_alpha()
 
 class Player():
     color = "red"
     proof = None
+    haveProof = False
     isPaused = False
     def __init__(self):
         self.pos = Position(2.0, 15.0)
         self.Sprite = TestSprite()
         self.Sprite.pause()
     def takeProof(self, proof):
-        proof.isPrinted = false
-    def putProof(self, proof):
-        proof.pos = self.pos
-        proof.isPrinted = True
-        proof = None
+        self.proof = proof
+        self.proof.isPrinted = False
+        self.haveProof = True
+        print("take")
+    def putProof(self):
+        print("put")
+        if (self.haveProof == True):
+            self.proof.pos = Position(self.pos.x, self.pos.y)
+            self.proof.isPrinted = True
+            self.haveProof = False
     def draw(self, fenetre):
         self.Sprite.update()
         self.Sprite.rect.x = self.pos.x * 32
@@ -152,6 +158,7 @@ class inspectorPedro():
         self.node = node
         self.direction = node
         self.pos = node.pos
+        self.img = pygame.image.load("img/Perso/pedro.png").convert_alpha()
     def move(self, fenetre, players):
         if ((round(self.pos.x * 10) == round(self.direction.pos.x * 10)) and (round(self.pos.y * 10) == round(self.direction.pos.y * 10))):
             self.node = self.direction
@@ -164,7 +171,7 @@ class inspectorPedro():
         if (self.node.weigth == 0):
             clean(n)
             onVaMangerDesChips(n[random.choice([15, 22, 47, 42, 38, 31, 27, 0, 51])], 0)
-        fenetre.blit(block1bas, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
+        fenetre.blit(self.img, Rect(self.pos.x * 32, self.pos.y * 32, 32, 32))
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
             if (self.checkingPlayer.pos.x > self.pos.x):
@@ -178,8 +185,8 @@ class inspectorPedro():
                 self.pos.y += spc
         
     def lookFor(self, player):
-        if (player.proof != None):
-            self.goToPlayerRoom()
+        if (player.haveProof != False):
+            #self.goToPlayerRoom()
             #tutulu UNE PREUVE
             return
         else:
@@ -189,11 +196,9 @@ taille = hauteur, largeur = 1920, 1080
 
 fenetre = pygame.display.set_mode(taille)
 
-block1bas = pygame.image.load("block1bas.png").convert_alpha()
-
 continuer = 1
 players = [Player()]
-proofs = [Proof("block1bas.png"), Proof("block1bas.png")]
+proofs = [Proof("img/Preuves/briquet.png", 5.0, 5.0), Proof("img/Preuves/nes_64.png", 35.0, 2.0), Proof("img/Preuves/rope_32.png", 13.0, 13.0), Proof("img/Preuves/cuillere.png", 5.0, 26.0), Proof("img/Preuves/cut_64.png", 38.0, 28.0)]
 background = pygame.image.load("img/Map/map.png").convert_alpha()
 menu_c = 1
 menu = pygame.image.load("img/UI/menu/main_menu.png").convert()
@@ -326,6 +331,15 @@ while continuer:
             keys = pygame.key.get_pressed()
             if (event.key == K_ESCAPE):
                 continuer = 0
+            if (event.key == K_SPACE):
+                if (players[0].haveProof == False):
+                    for proof in proofs:
+                        if (proof.pos.x - players[0].pos.x > -1 and proof.pos.x - players[0].pos.x < 1):
+                            if (proof.pos.y - players[0].pos.y > -1 and proof.pos.y - players[0].pos.y < 1):
+                                players[0].takeProof(proof)
+                                break
+                else:
+                    players[0].putProof()
             if (keys[K_LEFT]):
                 if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1 and lala[int(players[0].pos.y)][int(math.ceil(players[0].pos.x - spc))] != 1):
                     if (lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x - spc)] != 1 and lala[int(math.ceil(players[0].pos.y))][int(math.ceil(players[0].pos.x - spc))] != 1):
@@ -354,7 +368,8 @@ while continuer:
     for player in players:
         player.draw(fenetre)
     for proof in proofs:
-        fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
+        if (proof.isPrinted == True):
+            fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
 #    time.sleep(0.01)
 #    for node in n:
 #        basicfont = pygame.font.SysFont(None, 48)
