@@ -60,12 +60,15 @@ class TestSprite(pygame.sprite.Sprite):
         self.images.append(tmp)
         self.index = 0
         self.image = self.images[self.index]
+        self.start = time.time()
     def update(self):
         if (self.isPlaying == True):
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
-            self.image = self.images[self.index]
+            if (time.time() - self.start > 0.25):
+                self.start = time.time()
+                self.index += 1
+                if self.index >= len(self.images):
+                    self.index = 0
+                self.image = self.images[self.index]
     def pause(self):
         if (self.isPlaying == True):
             self.isPlaying = False
@@ -74,6 +77,7 @@ class TestSprite(pygame.sprite.Sprite):
     def play(self):
         if (self.isPlaying == False):
             self.isPlaying = True
+            self.start = time.time()
 
 class Position():
     x = 5.0
@@ -84,7 +88,8 @@ class Position():
 
 class Proof():
     image = None
-    isPrinted = True
+    isPrinted = False
+    isOnFloor = True
     def __init__(self, name, x, y):
         self.pos = Position(x, y)
         self.image = pygame.image.load(name).convert_alpha()
@@ -101,12 +106,14 @@ class Player():
     def takeProof(self, proof):
         self.proof = proof
         self.proof.isPrinted = False
+        self.proof.isOnFloor = False
         self.haveProof = True
     def putProof(self):
         if (self.haveProof == True):
             self.proof.pos = Position(self.pos.x, self.pos.y)
             self.proof.isPrinted = True
             self.haveProof = False
+            self.proof.isOnFloor = True
     def draw(self, fenetre):
         self.Sprite.update()
         self.Sprite.rect.x = self.pos.x * 32
@@ -144,6 +151,13 @@ def testlist(nodelist):
 def clean(nlist):
     for n in nlist:
         n.weigth = 50
+
+def checkProofNearby(players, proofs):
+    for player in players:
+        for proof in proofs:
+            if (proof.isPrinted == False and proof.isOnFloor == True):
+                if (proof.pos.x - player.pos.x > -2 and proof.pos.y - player.pos.y > -2 and proof.pos.x - player.pos.x < 2 and proof.pos.y - player.pos.y < 2):
+                    proof.isPrinted = True
 
 class inspectorPedro():
     direction = None
@@ -217,12 +231,20 @@ for joy in joysticks:
     joy.init()
 
 players = [Player()]
-proofs = [Proof("img/Preuves/briquet.png", 5.0, 5.0), Proof("img/Preuves/nes_64.png", 35.0, 2.0), Proof("img/Preuves/rope_32.png", 13.0, 13.0), Proof("img/Preuves/cuillere.png", 5.0, 26.0), Proof("img/Preuves/cut_64.png", 38.0, 28.0)]
+proofsPaths = [ "img/Preuves/red_proof/red_cut_32.png", "img/Preuves/red_proof/red_lighter_32.png", "img/Preuves/red_proof/red_rope_32.png", "img/Preuves/red_proof/red_spoon__32.png", "img/Preuves/red_proof/red_nes_32.png", "img/Preuves/red_proof/red_screwdriver_32.png", "img/Preuves/green_proof/green_cut_32.png", "img/Preuves/green_proof/green_lighter_32.png", "img/Preuves/green_proof/green_rope_32.png", "img/Preuves/green_proof/green_spoon_32.png", "img/Preuves/green_proof/green_nes_32.png", "img/Preuves/green_proof/green_screwdriver_32.png", "img/Preuves/orange_proof/orange_cut_32.png", "img/Preuves/orange_proof/orange_lighter_32.png", "img/Preuves/orange_proof/orange_rope_32.png", "img/Preuves/orange_proof/orange_spoon_32.png", "img/Preuves/orange_proof/orange_nes_32.png", "img/Preuves/orange_proof/orange_screwdriver_32.png", "img/Preuves/purple_proof/purple_cut_32.png", "img/Preuves/purple_proof/purple_lighter_32.png", "img/Preuves/purple_proof/purple_rope_32.png", "img/Preuves/purple_proof/purple_spoon_32.png", "img/Preuves/purple_proof/purple_nes_32.png", "img/Preuves/purple_proof/purple_screwdriver_32.png" ]
+proofs = []
+for proofPath in proofsPaths:
+    x = random.randint(1, 28)
+    y = random.randint(1, 38)
+    while (lala[x][y] != 0):
+        x = random.randint(1, 28)
+        y = random.randint(1, 38)
+    proofs.append(Proof(proofPath, y, x))
 background = pygame.image.load("img/Map/map.png").convert_alpha()
 menu_c = 1
 menu = pygame.image.load("img/UI/menu/main_menu.png").convert()
-new_rec = pygame.image.load("hand.png").convert_alpha()
-merci = pygame.image.load("OPTION.png").convert()
+new_rec = pygame.image.load("img/UI/menu/hand.png").convert_alpha()
+merci = pygame.image.load("img/UI/menu/credits.png").convert()
 son = pygame.mixer.Sound("audio/sounds/move_menu.wav")
 son2 = pygame.mixer.Sound("audio/sounds/select_menu.wav")
 
@@ -411,14 +433,15 @@ while continuer:
             players[0].Sprite.play()
         if (e[0] == 1):
             players[0].Sprite.pause()
+        checkProofNearby(players, proofs)
     fenetre.fill((0, 0, 0))
     fenetre.blit(background, (0, 0))
-    inspector.move(fenetre, players)
-    for player in players:
-        player.draw(fenetre)
     for proof in proofs:
         if (proof.isPrinted == True):
             fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
+    for player in players:
+        player.draw(fenetre)
+    inspector.move(fenetre, players)
 #    time.sleep(0.01)
 #    for node in n:
 #        basicfont = pygame.font.SysFont(None, 48)
