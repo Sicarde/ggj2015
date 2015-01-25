@@ -586,7 +586,7 @@ while menu_c == 1:
                     pygame.display.flip()
                     if e[2] == 1:
                         while menu_c == 1:
-                            time.sleep(3)
+                            time.sleep(2)
                             for event in pygame.event.get():
                                 fenetre.blit(tuto_2, (0,0))
                                 pygame.display.flip()
@@ -600,18 +600,18 @@ while menu_c == 1:
                                             if e[2] == 1:
                                                 son2.play()
                                                 while menu_c == 1:
-                                                    time.sleep(3)
+                                                    time.sleep(2)
                                                     for event in pygame.event.get():
                                                         fenetre.blit(tips, (0,0))
                                                         pygame.display.flip()
                                                         if e[2] == 1:
                                                             son.play()
                                                             while menu_c == 1:
-                                                                time.sleep(0.5)
+                                                                time.sleep(2)
                                                                 for event in pygame.event.get():
                                                                     fenetre.blit(controls, (0,0))
                                                                     pygame.display.flip()
-                                                                    time.sleep(3)
+                                                                    time.sleep(2)
                                                                     if e[2] == 1:
                                                                         menu_c = 0
             menu_c = 1
