@@ -219,15 +219,16 @@ class inspectorPedro():
             self.node = self.direction
             self.direction = min(self.node.nodeList)
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
-            vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
-            if (abs(vecteur.x) > abs(vecteur.y) and vecteur.x > 0):
-                self.Sprite.changeDirection(2)
-            elif (abs(vecteur.x) > abs(vecteur.y) and vecteur.x < 0):
-                self.Sprite.changeDirection(1)
-            elif (abs(vecteur.x) < abs(vecteur.y) and vecteur.y > 0):
-                self.Sprite.changeDirection(0)
-            elif (abs(vecteur.x) < abs(vecteur.y) and vecteur.y < 0):
-                self.Sprite.changeDirection(3)
+            if (lol != 0):
+                vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
+                if (abs(vecteur.x) > abs(vecteur.y) and vecteur.x > 0):
+                    self.Sprite.changeDirection(2)
+                elif (abs(vecteur.x) > abs(vecteur.y) and vecteur.x < 0):
+                    self.Sprite.changeDirection(1)
+                elif (abs(vecteur.x) < abs(vecteur.y) and vecteur.y > 0):
+                    self.Sprite.changeDirection(0)
+                elif (abs(vecteur.x) < abs(vecteur.y) and vecteur.y < 0):
+                    self.Sprite.changeDirection(3)
         else:
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
             vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
@@ -461,7 +462,6 @@ n.append(Node(10.0, 22.0, [n[48], n[46], n[45]]))
 n.append(Node(12.0, 20.0, [n[45], n[49], n[5]]))
 n.append(Node(19.0, 16.0, [n[7]]))
 
-inspector = inspectorPedro(n[0])
 
 onVaMangerDesChips(n[51], 0)
 
@@ -552,6 +552,9 @@ while menu_c == 1:
 pygame.key.set_repeat(100, 10)
 k = pygame.key.get_pressed()
 spc_player = 0.25
+startPol = time.time()
+isInspectorCreated = False
+loadPedro = pygame.image.load("img/UI/hud/pedro_load.png").convert_alpha()
 while continuer:
     clock.tick(60)
     for event in pygame.event.get():
@@ -621,7 +624,19 @@ while continuer:
             else:
                 offsety = 453
             fenetre.blit(proofsTypesImage[i], Rect(40 * 32 + offsetx, offsety, 64, 64))
-    inspector.move(fenetre, players, proofs)
+    if (isInspectorCreated == True):
+        inspector.move(fenetre, players, proofs)
+    elif (time.time() - startPol >= 15.0):
+        inspector = inspectorPedro(n[0])
+        isInspectorCreated = True
+    else:
+        if (time.time() - startPol / 1 >= 1):
+            j = 0
+            for i in range(0, 8 * int(time.time() - startPol), 1):
+                if (i % 8 == 0):
+                    j += 1
+                fenetre.blit(loadPedro, Rect(40 * 32 + 14, 789 + i + j, 1, 62))
+
 #    time.sleep(0.01)
 #    for node in n:
 #        basicfont = pygame.font.SysFont(None, 48)
