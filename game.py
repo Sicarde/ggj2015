@@ -330,25 +330,6 @@ class inspectorPedro():
                         onVaMangerDesChips(n[47], 0)
                         self.onMangeDesChips = True
                         return
-    def goNearPlayer(self):
-        if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
-            if (self.checkingPlayer.pos.x > self.pos.x):
-                self.pos.x += spc
-            else:
-                self.pos.x += spc
-        elif (not((self.checkingPlayer.pos.y - self.pos.y) > -1 and (self.checkingPlayer.pos.y - self.pos.y) < 1)):
-            if (self.checkingPlayer.pos.y > self.pos.y):
-                self.pos.y += spc
-            else:
-                self.pos.y += spc
-        
-    def lookFor(self, player):
-        if (player.haveProof != False):
-            #self.goToPlayerRoom()
-            #tutulu UNE PREUVE
-            return
-        else:
-            player.isPaused = False
 
 taille = hauteur, largeur = 1920, 1080
 
@@ -485,17 +466,6 @@ def getEvent(e, joy):
             ev[2] = 1
         if k[K_ESCAPE]:
             ev[2] = -1
-    if (e.type == JOYAXISMOTION): # e1 == l/r
-        if (joysticks[joy].get_axis(0) < -0.1 or joysticks[joy].get_axis(0) > 0.1):
-            if (joysticks[joy].get_axis(1) < -0.1 or joysticks[joy].get_axis(1) > 0.1):
-                if joysticks[joy].get_axis(0) < 0 and joysticks[joy].get_axis(1) < 0:
-                    ev[0] = 1
-                if joysticks[joy].get_axis(0) > 0 and joysticks[joy].get_axis(1) > 0:
-                    ev[0] = -1
-                if joysticks[joy].get_axis(1) < 0 and joysticks[joy].get_axis(0) > 0:
-                    ev[1] = 1
-                if joysticks[joy].get_axis(1) > 0 and joysticks[joy].get_axis(0) < 0:
-                    ev[1] = -1
     if (e.type == JOYHATMOTION):
         if (e.joy == joy):
             g = joysticks[joy].get_hat(0)
@@ -507,10 +477,19 @@ def getEvent(e, joy):
                 ev[2] = 1
             if (e.button == 1):
                 ev[2] = -1
-    if (e.type == JOYAXISMOTION):
-        if (e.joy == joy or joy == -1):
-            ev[1] = joysticks[joy].get_axis(0) 
-            ev[0] = joysticks[joy].get_axis(1) * -1
+    #if (e.type == JOYAXISMOTION): # e1 == l/r
+    #    if (joysticks[joy].get_axis(0) < -0.1 or joysticks[joy].get_axis(0) > 0.1) or (joysticks[joy].get_axis(1) < -0.1 or joysticks[joy].get_axis(1) > 0.1):
+    #        if joysticks[joy].get_axis(0) < 0 and joysticks[joy].get_axis(1) < 0:
+    #            ev[0] = 1
+    #        if joysticks[joy].get_axis(0) > 0 and joysticks[joy].get_axis(1) > 0:
+    #            ev[0] = -1
+    #        if joysticks[joy].get_axis(1) < 0 and joysticks[joy].get_axis(0) > 0:
+    #            ev[1] = 1
+    #        if joysticks[joy].get_axis(1) > 0 and joysticks[joy].get_axis(0) < 0:
+    #            ev[1] = -1
+    #        print("ev")
+    #        print(ev[0])
+    #        print(ev[1])
     return ev
 
 speed = 2.5
@@ -566,6 +545,7 @@ spc_player = 0.05
 startPol = time.time()
 isInspectorCreated = False
 loadPedro = pygame.image.load("img/UI/hud/pedro_load.png").convert_alpha()
+e = [ [], [], [], [] ]
 while continuer:
     clock.tick(60)
     for event in pygame.event.get():
@@ -620,7 +600,15 @@ while continuer:
     for player in players:
         player.draw(fenetre)
         for i in range(0, player.isGuilty, 1):
-            fenetre.blit(cross[proofsColors.index(player.color)], Rect(40 * 32 + 18 + 75, i * 27 + 19, 25, 25))
+            if (player.color == "red"):
+                offsety = 19
+            elif (player.color == "green"):
+                offsety = 171
+            elif (player.color == "purple"):
+                offsety = 314
+            else:
+                offsety = 453
+            fenetre.blit(cross[proofsColors.index(player.color)], Rect(40 * 32 + 18 + 75, i * 27 + offsety, 25, 25))
         if (player.haveProof == True):
             i = 0
             while (proofsTypes[i] != player.proof.t):
