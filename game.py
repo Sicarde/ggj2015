@@ -269,7 +269,7 @@ joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_coun
 for joy in joysticks:
     joy.init()
 
-players = [Player("red", "img/Perso/red.png")]
+players = [Player("red", "img/Perso/red.png") for x in range(pygame.joystick.get_count())]
 #players = [Player("green", "img/Perso/green.png")]
 #players = [Player("purple", "img/Perso/purple.png")]
 #players = [Player("orange", "img/Perso/orange.png")]
@@ -412,7 +412,7 @@ clock = pygame.time.Clock()
 while menu_c == 1:
     clock.tick(60)
     for event in pygame.event.get():
-        e = getEvent(event, -1)    
+        e = getEvent(event, 0)    
         if e[2] == -1:
             exit(0)
         if e[0] < 0:
@@ -455,42 +455,43 @@ spc_player = 0.25
 while continuer:
     clock.tick(60)
     for event in pygame.event.get():
-        e = getEvent(event, 0)
-        if (e[2] == -1):
-            continuer = 0
-        if (e[2] == 1):
-            if (players[0].haveProof == False):
-                for proof in proofs:
-                    if (proof.pos.x - players[0].pos.x > -1 and proof.pos.x - players[0].pos.x < 1):
-                        if (proof.pos.y - players[0].pos.y > -1 and proof.pos.y - players[0].pos.y < 1):
-                            players[0].takeProof(proof)
-                            sonpick.play()
-                            break
-            else:
-                players[0].putProof()
-                sondrop.play()
-        if (e[1] == -1):
-            if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1 and lala[int(players[0].pos.y)][int(math.ceil(players[0].pos.x - spc))] != 1):
-                if (lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x - spc)] != 1 and lala[int(math.ceil(players[0].pos.y))][int(math.ceil(players[0].pos.x - spc))] != 1):
-                    players[0].pos.x -= spc_player
-            players[0].Sprite.play()
-        elif (e[1] == 1):
-            if (lala[int(players[0].pos.y)][int(math.ceil((players[0].pos.x + spc)))] != 1 and lala[int(players[0].pos.y)][int(players[0].pos.x + spc)] != 1):
-                if (lala[int(math.ceil(players[0].pos.y))][int(math.ceil((players[0].pos.x + spc)))] != 1 and lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x + spc)] != 1):
-                    players[0].pos.x += spc_player
-            players[0].Sprite.play()
-        if (e[0] == 1):
-            if (lala[int(players[0].pos.y - spc)][int(players[0].pos.x)] != 1 and lala[int(math.ceil(players[0].pos.y - spc))][int(players[0].pos.x)] != 1):
-                if (lala[int(players[0].pos.y - spc)][int(math.ceil(players[0].pos.x))] != 1 and lala[int(math.ceil(players[0].pos.y - spc))][int(math.ceil(players[0].pos.x))] != 1):
-                    players[0].pos.y -= spc_player
-            players[0].Sprite.play()
-        elif (e[0] == -1):
-            if (lala[int(math.ceil((players[0].pos.y + spc)))][int(players[0].pos.x)] != 1 and lala[int(players[0].pos.y + spc)][int(players[0].pos.x)] != 1):
-                if (lala[int(math.ceil((players[0].pos.y + spc)))][int(math.ceil(players[0].pos.x))] != 1 and lala[int(players[0].pos.y + spc)][int(math.ceil(players[0].pos.x))] != 1):
-                    players[0].pos.y += spc_player
-            players[0].Sprite.play()
-        if (e[3] == 1 or (e[0] == 0 and e[1] == 0)):
-            players[0].Sprite.pause()
+        for i in range(0, len(players), 1):
+            e = getEvent(event, i)
+            if (e[2] == -1):
+                continuer = 0
+            if (e[2] == 1):
+                if (players[i].haveProof == False):
+                    for proof in proofs:
+                        if (proof.pos.x - players[i].pos.x > -1 and proof.pos.x - players[i].pos.x < 1):
+                            if (proof.pos.y - players[i].pos.y > -1 and proof.pos.y - players[i].pos.y < 1):
+                                players[i].takeProof(proof)
+                                sonpick.play()
+                                break
+                else:
+                    players[i].putProof()
+                    sondrop.play()
+            if (e[1] == -1):
+                if (lala[int(players[i].pos.y)][int(players[i].pos.x - spc)] != 1 and lala[int(players[i].pos.y)][int(math.ceil(players[i].pos.x - spc))] != 1):
+                    if (lala[int(math.ceil(players[i].pos.y))][int(players[i].pos.x - spc)] != 1 and lala[int(math.ceil(players[i].pos.y))][int(math.ceil(players[i].pos.x - spc))] != 1):
+                        players[i].pos.x -= spc_player
+                players[i].Sprite.play()
+            elif (e[1] == 1):
+                if (lala[int(players[i].pos.y)][int(math.ceil((players[i].pos.x + spc)))] != 1 and lala[int(players[i].pos.y)][int(players[i].pos.x + spc)] != 1):
+                    if (lala[int(math.ceil(players[i].pos.y))][int(math.ceil((players[i].pos.x + spc)))] != 1 and lala[int(math.ceil(players[i].pos.y))][int(players[i].pos.x + spc)] != 1):
+                        players[i].pos.x += spc_player
+                players[i].Sprite.play()
+            if (e[0] == 1):
+                if (lala[int(players[i].pos.y - spc)][int(players[i].pos.x)] != 1 and lala[int(math.ceil(players[i].pos.y - spc))][int(players[i].pos.x)] != 1):
+                    if (lala[int(players[i].pos.y - spc)][int(math.ceil(players[i].pos.x))] != 1 and lala[int(math.ceil(players[i].pos.y - spc))][int(math.ceil(players[i].pos.x))] != 1):
+                        players[i].pos.y -= spc_player
+                players[i].Sprite.play()
+            elif (e[0] == -1):
+                if (lala[int(math.ceil((players[i].pos.y + spc)))][int(players[i].pos.x)] != 1 and lala[int(players[i].pos.y + spc)][int(players[i].pos.x)] != 1):
+                    if (lala[int(math.ceil((players[i].pos.y + spc)))][int(math.ceil(players[i].pos.x))] != 1 and lala[int(players[i].pos.y + spc)][int(math.ceil(players[i].pos.x))] != 1):
+                        players[i].pos.y += spc_player
+                players[0].Sprite.play()
+            if (e[3] == 1 or (e[0] == 0 and e[1] == 0)):
+                players[i].Sprite.pause()
         checkProofNearby(players, proofs)
     fenetre.fill((0, 0, 0))
     fenetre.blit(background, (0, 0))
