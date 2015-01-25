@@ -63,19 +63,12 @@ class TestSprite(pygame.sprite.Sprite):
         self.start = time.time()
     def update(self):
         if (self.isPlaying == True):
-<<<<<<< HEAD
-            self.index += 1  
-            if self.index >= len(self.images):
-                self.index = 0
-            self.image = self.images[self.index]
-=======
             if (time.time() - self.start > 0.25):
                 self.start = time.time()
                 self.index += 1
                 if self.index >= len(self.images):
                     self.index = 0
                 self.image = self.images[self.index]
->>>>>>> e21e8d66252eb566412e4311b4992cef5802c30d
     def pause(self):
         if (self.isPlaying == True):
             self.isPlaying = False
@@ -267,11 +260,7 @@ hud = pygame.image.load("img/UI/hud/hud.png").convert_alpha()
 menu_c = 1
 menu = pygame.image.load("img/UI/menu/main_menu.png").convert()
 new_rec = pygame.image.load("img/UI/menu/hand.png").convert_alpha()
-<<<<<<< HEAD
-merci = pygame.image.load("OPTION.png").convert()
-=======
 merci = pygame.image.load("img/UI/menu/credits.png").convert()
->>>>>>> e21e8d66252eb566412e4311b4992cef5802c30d
 son = pygame.mixer.Sound("audio/sounds/move_menu.wav")
 son2 = pygame.mixer.Sound("audio/sounds/select_menu.wav")
 
