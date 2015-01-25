@@ -376,16 +376,23 @@ for joy in joysticks:
 players = []
 if (pygame.joystick.get_count() >= 1):
     players.append(Player("red", "img/Perso/red.png", 5, 1))
+    proofsPaths = [ "img/Preuves/red_proof/red_cut_32.png", "img/Preuves/red_proof/red_rope_32.png", "img/Preuves/red_proof/red_ballicorne_32.png"]
+    proofsColors = [ "red"]
 if (pygame.joystick.get_count() >= 2):
     players.append(Player("green", "img/Perso/green.png", 34, 1))
+    proofsPaths.extend([ "img/Preuves/green_proof/green_cut_32.png", "img/Preuves/green_proof/green_rope_32.png", "img/Preuves/green_proof/green_ballicorne_32.png"])
+    proofsColors.append("green")
 if (pygame.joystick.get_count() >= 3):
     players.append(Player("purple", "img/Perso/purple.png", 5, 28))
+    proofsPaths.extend([ "img/Preuves/orange_proof/orange_cut_32.png", "img/Preuves/orange_proof/orange_rope_32.png", "img/Preuves/orange_proof/orange_ballicorne_32.png"])
+    proofsColors.append("orange")
 if (pygame.joystick.get_count() >= 4):
     players.append(Player("orange", "img/Perso/orange.png", 34, 28))
-proofsPaths = [ "img/Preuves/red_proof/red_cut_32.png", "img/Preuves/red_proof/red_rope_32.png", "img/Preuves/red_proof/red_ballicorne_32.png", "img/Preuves/green_proof/green_cut_32.png", "img/Preuves/green_proof/green_rope_32.png", "img/Preuves/green_proof/green_ballicorne_32.png", "img/Preuves/orange_proof/orange_cut_32.png", "img/Preuves/orange_proof/orange_rope_32.png", "img/Preuves/orange_proof/orange_ballicorne_32.png", "img/Preuves/purple_proof/purple_cut_32.png", "img/Preuves/purple_proof/purple_rope_32.png", "img/Preuves/purple_proof/purple_ballicorne_32.png"]
+    proofsPaths.extend([ "img/Preuves/purple_proof/purple_cut_32.png", "img/Preuves/purple_proof/purple_rope_32.png", "img/Preuves/purple_proof/purple_ballicorne_32.png"])
+    proofsColors.append("purple")
+
 proofsTypes = [ "cut", "rope", "ballicorne" ]
 proofsTypesImage = [ pygame.image.load("img/UI/Preuves/cut_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/rope_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/ballicorne_64.png").convert_alpha() ]
-proofsColors = [ "red", "green", "orange", "purple" ]
 cross = [ pygame.image.load("img/UI/hud/red_cross.png").convert_alpha(), pygame.image.load("img/UI/hud/green_cross.png").convert_alpha(), pygame.image.load("img/UI/hud/orange-cross.png").convert_alpha(), pygame.image.load("img/UI/hud/purple_cross.png").convert_alpha() ]
 proofs = []
 i = 0
