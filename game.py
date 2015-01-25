@@ -477,8 +477,6 @@ def getEvent(e, joy):
         ev[1] = 1
     if k[K_SPACE]:
         ev[2] = 1
-    if k[K_ESCAPE]:
-        ev[2] = -1
     if (e.type == JOYHATMOTION):
         g = joysticks[joy].get_hat(0)
         ev[0] = g[1]
@@ -489,6 +487,8 @@ def getEvent(e, joy):
                 ev[2] = 1
             if (e.button == 1):
                 ev[2] = -1
+    if k[K_ESCAPE]:
+        ev[2] = -1
     #if (e.type == JOYAXISMOTION): # e1 == l/r
     #    if (joysticks[joy].get_axis(0) < -0.1 or joysticks[joy].get_axis(0) > 0.1) or (joysticks[joy].get_axis(1) < -0.1 or joysticks[joy].get_axis(1) > 0.1):
     #        if joysticks[joy].get_axis(0) < 0 and joysticks[joy].get_axis(1) < 0:
@@ -604,7 +604,7 @@ while continuer:
         for i in range(0, len(players), 1):
             e[i] = getEvent(event, i)
             if (e[i][2] == -1):
-                continuer = 0
+                exit(0)
             if (e[i][2] == 1):
                 if (players[i].haveProof == False):
                     for proof in proofs:
