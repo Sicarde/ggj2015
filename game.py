@@ -486,6 +486,10 @@ def getEvent(e, joy):
                 ev[2] = 1
             if (e.button == 1):
                 ev[2] = -1
+    if (e.type == JOYAXISMOTION):
+        if (e.joy == joy or joy == -1):
+            ev[1] = joysticks[joy].get_axis(0) 
+            ev[0] = joysticks[joy].get_axis(1) * -1
     return ev
 
 speed = 2.5
