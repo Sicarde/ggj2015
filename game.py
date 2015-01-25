@@ -219,15 +219,16 @@ class inspectorPedro():
             self.node = self.direction
             self.direction = min(self.node.nodeList)
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
-            vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
-            if (abs(vecteur.x) > abs(vecteur.y) and vecteur.x > 0):
-                self.Sprite.changeDirection(2)
-            elif (abs(vecteur.x) > abs(vecteur.y) and vecteur.x < 0):
-                self.Sprite.changeDirection(1)
-            elif (abs(vecteur.x) < abs(vecteur.y) and vecteur.y > 0):
-                self.Sprite.changeDirection(0)
-            elif (abs(vecteur.x) < abs(vecteur.y) and vecteur.y < 0):
-                self.Sprite.changeDirection(3)
+            if (lol != 0):
+                vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
+                if (abs(vecteur.x) > abs(vecteur.y) and vecteur.x > 0):
+                    self.Sprite.changeDirection(2)
+                elif (abs(vecteur.x) > abs(vecteur.y) and vecteur.x < 0):
+                    self.Sprite.changeDirection(1)
+                elif (abs(vecteur.x) < abs(vecteur.y) and vecteur.y > 0):
+                    self.Sprite.changeDirection(0)
+                elif (abs(vecteur.x) < abs(vecteur.y) and vecteur.y < 0):
+                    self.Sprite.changeDirection(3)
         else:
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
             vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
