@@ -99,6 +99,7 @@ class Proof():
         self.color = color
 
 class Player():
+    isGuilty = 0
     rotate = 0
     proof = None
     haveProof = False
@@ -171,29 +172,22 @@ class inspectorPedro():
     goToRoom = 0
     room = 0
     moving = 0
+    onMangeDesChips = False
     #room = { IDLE, GET OUT, RED, GREEN, ORANGE, PURP ] (7931)
     def __init__(self, node):
         self.node = node
         self.direction = node
         self.pos = node.pos
         self.Sprite = TestSprite("img/Perso/pedro.png")
-    def rotate(self):
-        lol = math.sqrt(pow(self.node.pos.x - self.direction.pos.x, 2) +  pow(self.node.pos.y - self.direction.pos.y, 2))
-        if (lol != 0):
-            vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
-            if (vecteur.x != 0):
-                angle = math.degrees(math.tan(vecteur.y / vecteur.x))
-                self.image = pygame.transform.rotate(self.Sprite.image, -1 * angle - 90)
     def draw(self, fenetre):
         self.Sprite.update()
         self.Sprite.rect.x = self.pos.x * 32
         self.Sprite.rect.y = self.pos.y * 32
         fenetre.blit(self.Sprite.image, self.Sprite.rect)
-    def move(self, fenetre, players):
+    def move(self, fenetre, players, proofs):
         if ((round(self.pos.x * 10) == round(self.direction.pos.x * 10)) and (round(self.pos.y * 10) == round(self.direction.pos.y * 10))):
             self.node = self.direction
             self.direction = min(self.node.nodeList)
-            self.rotate()
         else:
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
             vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
@@ -201,8 +195,50 @@ class inspectorPedro():
             self.pos.y -= vecteur.y / 10
         if (self.node.weigth == 0):
             clean(n)
+            self.onMangeDesChips = False
             onVaMangerDesChips(n[random.choice([15, 22, 47, 42, 38, 31, 27, 0, 51])], 0)
+        self.getNearestProof(proofs, players)
         self.draw(fenetre)
+    def getNearestProof(self, proofs, players):
+            for proof in proofs:
+                if (proof.isPrinted == True and proof.isOnFloor == True):
+                    if (proof.pos.x - self.pos.x > -2 and proof.pos.y - self.pos.y > -2 and proof.pos.x - self.pos.x < 2 and proof.pos.y - self.pos.y < 2):
+                        if (self.pos.x < 15 and self.pos.y < 9):
+                            players[0].isGuilty += 1
+                            proofs.remove(proof)
+                            return
+                        elif (self.pos.x > 24 and self.pos.y < 9):
+                            players[1].isGuilty += 1
+                            proofs.remove(proof)
+                            return
+                        elif (self.pos.x < 15 and self.pos.y > 19):
+                            players[2].isGuilty += 1
+                            proofs.remove(proof)
+                            return
+                        elif (self.pos.x > 24 and self.pos.y > 19):
+                            players[3].isGuilty += 1
+                            proofs.remove(proof)
+                            return
+                        elif (proof.color == "red" and (self.onMangeDesChips == False)):
+                            clean(n)
+                            onVaMangerDesChips(n[15], 0)
+                            self.onMangeDesChips = True
+                            return
+                        elif (proof.color == "green" and (self.onMangeDesChips == False)):
+                            clean(n)
+                            onVaMangerDesChips(n[27], 0)
+                            self.onMangeDesChips = True
+                            return
+                        elif (proof.color == "orange" and (self.onMangeDesChips == False)):
+                            clean(n)
+                            onVaMangerDesChips(n[38], 0)
+                            self.onMangeDesChips = True
+                            return
+                        elif (proof.color == "purple" and (self.onMangeDesChips == False)):
+                            clean(n)
+                            onVaMangerDesChips(n[47], 0)
+                            self.onMangeDesChips = True
+                            return
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
             if (self.checkingPlayer.pos.x > self.pos.x):
@@ -478,7 +514,7 @@ while continuer:
             else:
                 offsety = 453
             fenetre.blit(proofsTypesImage[i], Rect(40 * 32 + offsetx, offsety, 64, 64))
-    inspector.move(fenetre, players)
+    inspector.move(fenetre, players, proofs)
 #    time.sleep(0.01)
 #    for node in n:
 #        basicfont = pygame.font.SysFont(None, 48)
