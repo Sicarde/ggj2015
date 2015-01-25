@@ -198,6 +198,8 @@ def checkProofNearby(players, proofs):
 class inspectorPedro():
     direction = None
     #direction = { UP, DOWN, LEFT, RIGHT ]
+    printBubble = -1
+    #buuble = red, purple, green, orange
     checkingPlayer = None
     goToRoom = 0
     room = 0
@@ -209,15 +211,37 @@ class inspectorPedro():
         self.direction = node
         self.pos = node.pos
         self.Sprite = TestSprite("img/Perso/pedro.png")
+
+        tmp = pygame.Surface((32, 32))
+        self.images = []
+        plop = pygame.image.load("img/UI/bubbles_color.png").convert_alpha()
+        tmp.blit(plop, (0, 0), (0, 0, 64, 64))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (0, 32, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (32, 0, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (32, 32, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
     def draw(self, fenetre):
         self.Sprite.update()
         self.Sprite.rect.x = self.pos.x * 32
         self.Sprite.rect.y = self.pos.y * 32
         fenetre.blit(self.Sprite.image, self.Sprite.rect)
+        if (self.printBubble != -1):
+            fenetre.blit(self.images[self.printBubble], Rect(self.pos.x, self.pos.y - 32, 64, 64))
     def move(self, fenetre, players, proofs):
         if ((round(self.pos.x * 10) == round(self.direction.pos.x * 10)) and (round(self.pos.y * 10) == round(self.direction.pos.y * 10))):
             self.node = self.direction
             self.direction = min(self.node.nodeList)
+            self.printBubble = -1
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
             if (lol != 0):
                 vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
@@ -317,21 +341,25 @@ class inspectorPedro():
                     elif (proof.color == "red" and (self.onMangeDesChips == False)):
                         clean(n)
                         onVaMangerDesChips(n[15], 0)
+                        self.printBubble = 0
                         self.onMangeDesChips = True
                         return
                     elif (proof.color == "green" and (self.onMangeDesChips == False)):
                         clean(n)
                         onVaMangerDesChips(n[27], 0)
+                        self.printBubble = 2
                         self.onMangeDesChips = True
                         return
                     elif (proof.color == "orange" and (self.onMangeDesChips == False)):
                         clean(n)
                         onVaMangerDesChips(n[38], 0)
+                        self.printBubble = 3
                         self.onMangeDesChips = True
                         return
                     elif (proof.color == "purple" and (self.onMangeDesChips == False)):
                         clean(n)
                         onVaMangerDesChips(n[47], 0)
+                        self.printBubble = 1
                         self.onMangeDesChips = True
                         return
 
