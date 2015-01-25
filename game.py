@@ -247,6 +247,8 @@ class inspectorPedro():
                 if (random.randint(1, 50) == 1):
                     if (player.haveProof == True):
                         player.isGuilty += 1
+                        whistle = pygame.mixer.Sound("audio/sounds/whislte.ogg")
+                        whistle.play()
                         if (player.isGuilty >= 3):
                             img = pygame.image.load("img/UI/game_over/gameover_" + player.color + ".png").convert_alpha()
                             fenetre.fill((0, 0, 0))
@@ -375,10 +377,19 @@ menu_c = 1
 menu = pygame.image.load("img/UI/menu/main_menu.png").convert()
 new_rec = pygame.image.load("img/UI/menu/hand.png").convert_alpha()
 merci = pygame.image.load("img/UI/menu/credits.png").convert()
+controls = pygame.image.load("img/UI/tuto/controls.png").convert()
+tuto_1 = pygame.image.load("img/UI/tuto/tuto_p1.png").convert()
+tuto_2 = pygame.image.load("img/UI/tuto/tuto_p2.png").convert()
+tuto_3 = pygame.image.load("img/UI/tuto/tuto_p3.png").convert()
 son = pygame.mixer.Sound("audio/sounds/move_menu.wav")
 son2 = pygame.mixer.Sound("audio/sounds/select_menu.wav")
 sonpick = pygame.mixer.Sound("audio/sounds/pickup.wav")
 sondrop = pygame.mixer.Sound("audio/sounds/drop.wav")
+ding_dong = pygame.mixer.Sound("audio/sounds/doorbell.ogg")
+intro = pygame.mixer.music.load("audio/sounds/GGJ15_intro.ogg")
+main = pygame.mixer.music.load("audio/sounds/GGJ15_main.ogg")
+main = pygame.mixer.music.pause
+whistle = pygame.mixer.Sound("audio/sounds/whistle.ogg")
 
 n = [Node(19.0, 2.0, [])]
 n.append(Node(19.0, 9.0, [n[0]]))
@@ -516,7 +527,39 @@ while menu_c == 1:
         if position_new_rec.y == 250 and e[2] == 1:
             menu_c = 0
             son2.play()
-        if position_new_rec.y == 610 and e[2] == 1:
+            intro = pygame.mixer.music.play()
+        if position_new_rec.y == 370 and e[2] == 1:
+            son2.play()
+            while menu_c == 1:
+                for event in pygame.event.get():
+                    fenetre.blit(controls, (0,0))
+                    pygame.display.flip()
+                    if e[2] == 1:
+                        son2.play()
+                        while menu_c == 1:
+                            time.sleep(2)
+                            for event in pygame.event.get():
+                                fenetre.blit(tuto_1, (0,0))
+                                pygame.display.flip()
+                                if e[2] == 1:
+                                    son2.play()
+                                    while menu_c == 1:
+                                        time.sleep(0.5)
+                                        for event in pygame.event.get():
+                                            fenetre.blit(tuto_2, (0,0))
+                                            pygame.display.flip()
+                                            if e[2] == 1:
+                                                son.play()
+                                                while menu_c == 1:
+                                                    time.sleep(0.5)
+                                                    for event in pygame.event.get():
+                                                        fenetre.blit(tuto_3, (0,0))
+                                                        pygame.display.flip()
+                                                        time.sleep(0.5)
+                                                        if e[2] == 1:
+                                                            menu_c = 0
+            menu_c = 1
+        if position_new_rec.y == 490 and e[2] == 1:
             son2.play()
             while menu_c == 1:
                 for event in pygame.event.get():
@@ -531,7 +574,7 @@ while menu_c == 1:
                     fenetre.blit(merci, (0,0))
                     pygame.display.flip()
             menu_c = 1
-        if position_new_rec.y == 490 and e[2] == 1:
+        if position_new_rec.y == 610 and e[2] == 1:
                 exit(0)
     fenetre.blit(menu, (0,0))
     fenetre.blit(new_rec, position_new_rec)
@@ -626,6 +669,10 @@ while continuer:
         inspector.move(fenetre, players, proofs)
     elif (time.time() - startPol >= 15.0):
         inspector = inspectorPedro(n[0])
+        intro = pygame.mixer.music.stop()
+        intro = pygame.mixer.music.pause()
+        ding_dong.play()
+        main = pygame.mixer.music.play()
         isInspectorCreated = True
     else:
         if (time.time() - startPol / 1 >= 1):
