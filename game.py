@@ -346,7 +346,7 @@ pygame.font.init()
 
 def getEvent(e, joy):
     ev = [0, 0, 0]
-    if (e.type == KEYDOWN and joy == -1):
+    if (e.type == KEYDOWN):
         k = pygame.key.get_pressed()
         if k[K_DOWN]:
             ev[0] = -1
