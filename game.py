@@ -247,9 +247,11 @@ class inspectorPedro():
                 if (random.randint(1, 50) == 1):
                     if (player.haveProof == True):
                         player.isGuilty += 1
-                        whistle = pygame.mixer.Sound("audio/sounds/whislte.ogg")
+                        whistle = pygame.mixer.Sound("audio/sounds/found.wav")
                         whistle.play()
                         if (player.isGuilty >= 3):
+                            police = pygame.mixer.Sound("audio/sounds/police.wav")
+                            police.play()
                             img = pygame.image.load("img/UI/game_over/gameover_" + player.color + ".png").convert_alpha()
                             fenetre.fill((0, 0, 0))
                             fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
