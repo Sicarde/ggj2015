@@ -230,6 +230,27 @@ class inspectorPedro():
         tmp.blit(plop, (0, 0), (32, 32, 32, 32))
         tmp.set_colorkey(0)
         self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        plop = pygame.image.load("img/UI/bubbles.png").convert_alpha()
+        tmp.blit(plop, (0, 0), (0, 0, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (0, 32, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (0, 64, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (32, 0, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (32, 32, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
     def draw(self, fenetre):
         self.Sprite.update()
         self.Sprite.rect.x = self.pos.x * 32
@@ -272,6 +293,7 @@ class inspectorPedro():
                     if (player.haveProof == True):
                         player.isGuilty += 1
                         whistle = pygame.mixer.Sound("audio/sounds/found.wav")
+                        self.printBubble = 8
                         whistle.play()
                         if (player.isGuilty >= 3):
                             police = pygame.mixer.Sound("audio/sounds/police.wav")
