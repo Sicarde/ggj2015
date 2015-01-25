@@ -104,8 +104,8 @@ class Player():
     proof = None
     haveProof = False
     isPaused = False
-    def __init__(self, color, sprite):
-        self.pos = Position(2.0, 15.0)
+    def __init__(self, color, sprite, x, y):
+        self.pos = Position(x, y)
         self.Sprite = TestSprite(sprite)
         self.Sprite.pause()
         self.color = color
@@ -198,7 +198,25 @@ class inspectorPedro():
             self.onMangeDesChips = False
             onVaMangerDesChips(n[random.choice([15, 22, 47, 42, 38, 31, 27, 0, 51])], 0)
         self.getNearestProof(proofs, players)
+        self.getNearestPlayer(proofs, players)
         self.draw(fenetre)
+    def getNearestPlayer(self, proofs, players):
+        for player in players:
+            if (player.pos.x - self.pos.x > -2 and player.pos.y - self.pos.y > -2 and player.pos.x - self.pos.x < 2 and player.pos.y - self.pos.y < 2):
+                if (random.randint(1, 50) == 1):
+                    if (player.haveProof == True):
+                        player.isGuilty += 1
+                        if (player.isGuilty >= 3):
+                            img = pygame.image.load("img/UI/game_over/gameover_" + player.color + ".png").convert_alpha()
+                            fenetre.fill((0, 0, 0))
+                            fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
+                            pygame.display.flip()
+                            time.sleep(2)
+                            pygame.event.wait()
+                            exit(0)
+                        proofs.remove(player.proof)
+                        player.haveProof = False
+                        return
     def getNearestProof(self, proofs, players):
         for proof in proofs:
             if (proof.isPrinted == True and proof.isOnFloor == True):
@@ -210,6 +228,7 @@ class inspectorPedro():
                             fenetre.fill((0, 0, 0))
                             fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
                             pygame.display.flip()
+                            time.sleep(2)
                             pygame.event.wait()
                             exit(0)
                         proofs.remove(proof)
@@ -221,6 +240,7 @@ class inspectorPedro():
                             fenetre.fill((0, 0, 0))
                             fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
                             pygame.display.flip()
+                            time.sleep(2)
                             pygame.event.wait()
                             exit(0)
                         proofs.remove(proof)
@@ -232,6 +252,7 @@ class inspectorPedro():
                             fenetre.fill((0, 0, 0))
                             fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
                             pygame.display.flip()
+                            time.sleep(2)
                             pygame.event.wait()
                             exit(0)
                         proofs.remove(proof)
@@ -243,6 +264,7 @@ class inspectorPedro():
                             fenetre.fill((0, 0, 0))
                             fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
                             pygame.display.flip()
+                            time.sleep(2)
                             pygame.event.wait()
                             exit(0)
                         proofs.remove(proof)
@@ -299,13 +321,13 @@ for joy in joysticks:
 
 players = []
 if (pygame.joystick.get_count() >= 1):
-    players.append(Player("red", "img/Perso/red.png"))
+    players.append(Player("red", "img/Perso/red.png", 5, 1))
 if (pygame.joystick.get_count() >= 2):
-    players.append(Player("green", "img/Perso/green.png"))
+    players.append(Player("green", "img/Perso/green.png", 34, 1))
 if (pygame.joystick.get_count() >= 3):
-    players.append(Player("purple", "img/Perso/purple.png"))
+    players.append(Player("purple", "img/Perso/purple.png", 5, 28))
 if (pygame.joystick.get_count() >= 4):
-    players.append(Player("orange", "img/Perso/orange.png"))
+    players.append(Player("orange", "img/Perso/orange.png", 34, 28))
 proofsPaths = [ "img/Preuves/red_proof/red_cut_32.png", "img/Preuves/red_proof/red_lighter_32.png", "img/Preuves/red_proof/red_rope_32.png", "img/Preuves/red_proof/red_spoon__32.png", "img/Preuves/red_proof/red_nes_32.png", "img/Preuves/red_proof/red_screwdriver_32.png", "img/Preuves/green_proof/green_cut_32.png", "img/Preuves/green_proof/green_lighter_32.png", "img/Preuves/green_proof/green_rope_32.png", "img/Preuves/green_proof/green_spoon_32.png", "img/Preuves/green_proof/green_nes_32.png", "img/Preuves/green_proof/green_screwdriver_32.png", "img/Preuves/orange_proof/orange_cut_32.png", "img/Preuves/orange_proof/orange_lighter_32.png", "img/Preuves/orange_proof/orange_rope_32.png", "img/Preuves/orange_proof/orange_spoon_32.png", "img/Preuves/orange_proof/orange_nes_32.png", "img/Preuves/orange_proof/orange_screwdriver_32.png", "img/Preuves/purple_proof/purple_cut_32.png", "img/Preuves/purple_proof/purple_lighter_32.png", "img/Preuves/purple_proof/purple_rope_32.png", "img/Preuves/purple_proof/purple_spoon_32.png", "img/Preuves/purple_proof/purple_nes_32.png", "img/Preuves/purple_proof/purple_screwdriver_32.png" ]
 proofsTypes = [ "cut", "lighter", "rope", "spoon", "nes", "screwdriver" ]
 proofsTypesImage = [ pygame.image.load("img/UI/Preuves/cut_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/lighter_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/rope_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/spoon_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/nes_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/screwdriver_64.png").convert_alpha() ]
