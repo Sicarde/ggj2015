@@ -215,7 +215,7 @@ class inspectorPedro():
         tmp = pygame.Surface((32, 32))
         self.images = []
         plop = pygame.image.load("img/UI/bubbles_color.png").convert_alpha()
-        tmp.blit(plop, (0, 0), (0, 0, 64, 64))
+        tmp.blit(plop, (0, 0), (0, 0, 32, 32))
         tmp.set_colorkey(0)
         self.images.append(tmp)
         tmp = pygame.Surface((32, 32))
@@ -236,12 +236,11 @@ class inspectorPedro():
         self.Sprite.rect.y = self.pos.y * 32
         fenetre.blit(self.Sprite.image, self.Sprite.rect)
         if (self.printBubble != -1):
-            fenetre.blit(self.images[self.printBubble], Rect(self.pos.x, self.pos.y - 32, 64, 64))
+            fenetre.blit(self.images[self.printBubble], Rect(self.pos.x * 32 + 32, self.pos.y * 32 - 32, 32, 32))
     def move(self, fenetre, players, proofs):
         if ((round(self.pos.x * 10) == round(self.direction.pos.x * 10)) and (round(self.pos.y * 10) == round(self.direction.pos.y * 10))):
             self.node = self.direction
             self.direction = min(self.node.nodeList)
-            self.printBubble = -1
             lol = math.sqrt(pow(self.pos.x - self.direction.pos.x, 2) +  pow(self.pos.y - self.direction.pos.y, 2))
             if (lol != 0):
                 vecteur = Position((self.pos.x - self.direction.pos.x) / lol, (self.pos.y - self.direction.pos.y) / lol)
@@ -261,6 +260,7 @@ class inspectorPedro():
         if (self.node.weigth == 0):
             clean(n)
             self.onMangeDesChips = False
+            self.printBubble = -1
             onVaMangerDesChips(n[random.choice([15, 22, 47, 42, 38, 31, 27, 0, 51])], 0)
         self.getNearestProof(proofs, players)
         self.getNearestPlayer(proofs, players)
