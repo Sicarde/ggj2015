@@ -311,7 +311,7 @@ class inspectorPedro():
                     else:
                         self.printBubble = 6
                 else:
-                    self.printBubble = 6
+                    self.printBubble = 4
     def getNearestProof(self, proofs, players):
         for proof in proofs:
             if (proof.isPrinted == True and proof.isOnFloor == True):
