@@ -570,10 +570,10 @@ while continuer:
     clock.tick(60)
     for event in pygame.event.get():
         for i in range(0, len(players), 1):
-            e = getEvent(event, i)
-            if (e[2] == -1):
+            e[i] = getEvent(event, i)
+            if (e[i][2] == -1):
                 continuer = 0
-            if (e[2] == 1):
+            if (e[i][2] == 1):
                 if (players[i].haveProof == False):
                     for proof in proofs:
                         if (proof.pos.x - players[i].pos.x > -1 and proof.pos.x - players[i].pos.x < 1):
@@ -584,31 +584,31 @@ while continuer:
                 else:
                     players[i].putProof()
                     sondrop.play()
-            if (e[1] == -1):
+            if (e[i][1] == -1):
                 if (lala[int(players[i].pos.y)][int(players[i].pos.x - spc)] != 1 and lala[int(players[i].pos.y)][int(math.ceil(players[i].pos.x - spc))] != 1):
                     if (lala[int(math.ceil(players[i].pos.y))][int(players[i].pos.x - spc)] != 1 and lala[int(math.ceil(players[i].pos.y))][int(math.ceil(players[i].pos.x - spc))] != 1):
                         players[i].pos.x -= spc_player
                         players[i].Sprite.changeDirection(2)
                 players[i].Sprite.play()
-            elif (e[1] == 1):
+            elif (e[i][1] == 1):
                 if (lala[int(players[i].pos.y)][int(math.ceil((players[i].pos.x + spc)))] != 1 and lala[int(players[i].pos.y)][int(players[i].pos.x + spc)] != 1):
                     if (lala[int(math.ceil(players[i].pos.y))][int(math.ceil((players[i].pos.x + spc)))] != 1 and lala[int(math.ceil(players[i].pos.y))][int(players[i].pos.x + spc)] != 1):
                         players[i].pos.x += spc_player
                         players[i].Sprite.changeDirection(1)
                 players[i].Sprite.play()
-            if (e[0] == 1):
+            if (e[i][0] == 1):
                 if (lala[int(players[i].pos.y - spc)][int(players[i].pos.x)] != 1 and lala[int(math.ceil(players[i].pos.y - spc))][int(players[i].pos.x)] != 1):
                     if (lala[int(players[i].pos.y - spc)][int(math.ceil(players[i].pos.x))] != 1 and lala[int(math.ceil(players[i].pos.y - spc))][int(math.ceil(players[i].pos.x))] != 1):
                         players[i].pos.y -= spc_player
                         players[i].Sprite.changeDirection(0)
                 players[i].Sprite.play()
-            elif (e[0] == -1):
+            elif (e[i][0] == -1):
                 if (lala[int(math.ceil((players[i].pos.y + spc)))][int(players[i].pos.x)] != 1 and lala[int(players[i].pos.y + spc)][int(players[i].pos.x)] != 1):
                     if (lala[int(math.ceil((players[i].pos.y + spc)))][int(math.ceil(players[i].pos.x))] != 1 and lala[int(players[i].pos.y + spc)][int(math.ceil(players[i].pos.x))] != 1):
                         players[i].pos.y += spc_player
                         players[i].Sprite.changeDirection(3)
                 players[0].Sprite.play()
-            if (e[3] == 1 or (e[0] == 0 and e[1] == 0)):
+            if (e[i][3] == 1 or (e[i][0] == 0 and e[i][1] == 0)):
                 players[i].Sprite.pause()
         checkProofNearby(players, proofs)
     fenetre.fill((0, 0, 0))
