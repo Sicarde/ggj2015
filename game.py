@@ -45,6 +45,8 @@ spc = 0.01
 
 class TestSprite(pygame.sprite.Sprite):
     isPlaying = True
+    direction = 0
+    #up, right, left, down
     def __init__(self, name):
         super(TestSprite, self).__init__()
         tmp = pygame.Surface((32, 32))
@@ -58,21 +60,49 @@ class TestSprite(pygame.sprite.Sprite):
         tmp.blit(plop, (0, 0), (0, 32, 32, 32))
         tmp.set_colorkey(0)
         self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (32, 0, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (32, 32, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (64, 0, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (64, 32, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (96, 0, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
+        tmp = pygame.Surface((32, 32))
+        tmp.blit(plop, (0, 0), (96, 32, 32, 32))
+        tmp.set_colorkey(0)
+        self.images.append(tmp)
         self.index = 0
         self.image = self.images[self.index]
         self.start = time.time()
+    def changeDirection(self, direct):
+        self.direction = direct
+        self.index = 2 * direct
     def update(self):
         if (self.isPlaying == True):
             if (time.time() - self.start > 0.25):
                 self.start = time.time()
                 self.index += 1
-                if self.index >= len(self.images):
-                    self.index = 0
+                if self.index % 2 == 0:
+                    self.index -= 2
                 self.image = self.images[self.index]
     def pause(self):
         if (self.isPlaying == True):
             self.isPlaying = False
-            self.index = 0
+            if (self.index % 2 == 1):
+                self.index -= 1
             self.image = self.images[self.index]
     def play(self):
         if (self.isPlaying == False):
@@ -508,21 +538,25 @@ while continuer:
                 if (lala[int(players[i].pos.y)][int(players[i].pos.x - spc)] != 1 and lala[int(players[i].pos.y)][int(math.ceil(players[i].pos.x - spc))] != 1):
                     if (lala[int(math.ceil(players[i].pos.y))][int(players[i].pos.x - spc)] != 1 and lala[int(math.ceil(players[i].pos.y))][int(math.ceil(players[i].pos.x - spc))] != 1):
                         players[i].pos.x -= spc_player
+                        players[i].Sprite.changeDirection(2)
                 players[i].Sprite.play()
             elif (e[1] == 1):
                 if (lala[int(players[i].pos.y)][int(math.ceil((players[i].pos.x + spc)))] != 1 and lala[int(players[i].pos.y)][int(players[i].pos.x + spc)] != 1):
                     if (lala[int(math.ceil(players[i].pos.y))][int(math.ceil((players[i].pos.x + spc)))] != 1 and lala[int(math.ceil(players[i].pos.y))][int(players[i].pos.x + spc)] != 1):
                         players[i].pos.x += spc_player
+                        players[i].Sprite.changeDirection(1)
                 players[i].Sprite.play()
             if (e[0] == 1):
                 if (lala[int(players[i].pos.y - spc)][int(players[i].pos.x)] != 1 and lala[int(math.ceil(players[i].pos.y - spc))][int(players[i].pos.x)] != 1):
                     if (lala[int(players[i].pos.y - spc)][int(math.ceil(players[i].pos.x))] != 1 and lala[int(math.ceil(players[i].pos.y - spc))][int(math.ceil(players[i].pos.x))] != 1):
                         players[i].pos.y -= spc_player
+                        players[i].Sprite.changeDirection(0)
                 players[i].Sprite.play()
             elif (e[0] == -1):
                 if (lala[int(math.ceil((players[i].pos.y + spc)))][int(players[i].pos.x)] != 1 and lala[int(players[i].pos.y + spc)][int(players[i].pos.x)] != 1):
                     if (lala[int(math.ceil((players[i].pos.y + spc)))][int(math.ceil(players[i].pos.x))] != 1 and lala[int(players[i].pos.y + spc)][int(math.ceil(players[i].pos.x))] != 1):
                         players[i].pos.y += spc_player
+                        players[i].Sprite.changeDirection(3)
                 players[0].Sprite.play()
             if (e[3] == 1 or (e[0] == 0 and e[1] == 0)):
                 players[i].Sprite.pause()
