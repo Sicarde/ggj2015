@@ -392,6 +392,7 @@ intro = pygame.mixer.music.load("audio/sounds/GGJ15_intro.ogg")
 main = pygame.mixer.music.load("audio/sounds/GGJ15_main.ogg")
 main = pygame.mixer.music.pause
 whistle = pygame.mixer.Sound("audio/sounds/whistle.ogg")
+tips = pygame.image.load("img/UI/tuto/tips.png")
 
 n = [Node(19.0, 2.0, [])]
 n.append(Node(19.0, 9.0, [n[0]]))
@@ -533,33 +534,40 @@ while menu_c == 1:
         if position_new_rec.y == 370 and e[2] == 1:
             son2.play()
             while menu_c == 1:
+                time.sleep(0.5)
                 for event in pygame.event.get():
-                    fenetre.blit(controls, (0,0))
+                    fenetre.blit(tips, (0,0))
                     pygame.display.flip()
                     if e[2] == 1:
-                        son2.play()
                         while menu_c == 1:
-                            time.sleep(2)
+                            time.sleep(0.5)
                             for event in pygame.event.get():
-                                fenetre.blit(tuto_1, (0,0))
+                                fenetre.blit(controls, (0,0))
                                 pygame.display.flip()
                                 if e[2] == 1:
                                     son2.play()
                                     while menu_c == 1:
-                                        time.sleep(0.5)
+                                        time.sleep(2)
                                         for event in pygame.event.get():
-                                            fenetre.blit(tuto_2, (0,0))
+                                            fenetre.blit(tuto_1, (0,0))
                                             pygame.display.flip()
                                             if e[2] == 1:
-                                                son.play()
+                                                son2.play()
                                                 while menu_c == 1:
                                                     time.sleep(0.5)
                                                     for event in pygame.event.get():
-                                                        fenetre.blit(tuto_3, (0,0))
+                                                        fenetre.blit(tuto_2, (0,0))
                                                         pygame.display.flip()
-                                                        time.sleep(0.5)
                                                         if e[2] == 1:
-                                                            menu_c = 0
+                                                            son.play()
+                                                            while menu_c == 1:
+                                                                time.sleep(0.5)
+                                                                for event in pygame.event.get():
+                                                                    fenetre.blit(tuto_3, (0,0))
+                                                                    pygame.display.flip()
+                                                                    time.sleep(0.5)
+                                                                    if e[2] == 1:
+                                                                        menu_c = 0
             menu_c = 1
         if position_new_rec.y == 490 and e[2] == 1:
             son2.play()
