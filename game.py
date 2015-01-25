@@ -334,7 +334,9 @@ onVaMangerDesChips(n[51], 0)
 pygame.font.init()
 
 def getEvent(e, joy):
-    ev = [0, 0, 0]
+    ev = [0, 0, 0, 0]
+    if (e.type == KEYUP):
+        ev[3] = 1 
     if (e.type == KEYDOWN and joy == -1):
         k = pygame.key.get_pressed()
         if k[K_DOWN]:
@@ -447,7 +449,7 @@ while continuer:
                 if (lala[int(math.ceil((players[0].pos.y + spc)))][int(math.ceil(players[0].pos.x))] != 1 and lala[int(players[0].pos.y + spc)][int(math.ceil(players[0].pos.x))] != 1):
                     players[0].pos.y += spc_player
             players[0].Sprite.play()
-        if (e[0] == 1):
+        if (e[3] == 1 or (e[0] == 0 and e[1] == 0)):
             players[0].Sprite.pause()
         checkProofNearby(players, proofs)
     fenetre.fill((0, 0, 0))
