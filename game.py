@@ -534,38 +534,38 @@ while menu_c == 1:
         if position_new_rec.y == 370 and e[2] == 1:
             son2.play()
             while menu_c == 1:
-                time.sleep(0.5)
+                time.sleep(3)
                 for event in pygame.event.get():
-                    fenetre.blit(tips, (0,0))
+                    fenetre.blit(tuto_1, (0,0))
                     pygame.display.flip()
                     if e[2] == 1:
                         while menu_c == 1:
-                            time.sleep(0.5)
+                            time.sleep(3)
                             for event in pygame.event.get():
-                                fenetre.blit(controls, (0,0))
+                                fenetre.blit(tuto_2, (0,0))
                                 pygame.display.flip()
                                 if e[2] == 1:
                                     son2.play()
                                     while menu_c == 1:
                                         time.sleep(2)
                                         for event in pygame.event.get():
-                                            fenetre.blit(tuto_1, (0,0))
+                                            fenetre.blit(tuto_3, (0,0))
                                             pygame.display.flip()
                                             if e[2] == 1:
                                                 son2.play()
                                                 while menu_c == 1:
-                                                    time.sleep(0.5)
+                                                    time.sleep(3)
                                                     for event in pygame.event.get():
-                                                        fenetre.blit(tuto_2, (0,0))
+                                                        fenetre.blit(tips, (0,0))
                                                         pygame.display.flip()
                                                         if e[2] == 1:
                                                             son.play()
                                                             while menu_c == 1:
                                                                 time.sleep(0.5)
                                                                 for event in pygame.event.get():
-                                                                    fenetre.blit(tuto_3, (0,0))
+                                                                    fenetre.blit(controls, (0,0))
                                                                     pygame.display.flip()
-                                                                    time.sleep(0.5)
+                                                                    time.sleep(3)
                                                                     if e[2] == 1:
                                                                         menu_c = 0
             menu_c = 1
