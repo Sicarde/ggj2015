@@ -289,7 +289,7 @@ class inspectorPedro():
                     elif (len(players) > 2 and self.pos.x < 15 and self.pos.y > 19):
                         players[2].isGuilty += 1
                         if (players[2].isGuilty >= 3):
-                            img = pygame.image.load("img/UI/game_over/gameover_orange.png").convert_alpha()
+                            img = pygame.image.load("img/UI/game_over/gameover_purple.png").convert_alpha()
                             fenetre.fill((0, 0, 0))
                             fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
                             pygame.display.flip()
@@ -301,7 +301,7 @@ class inspectorPedro():
                     elif (len(players) > 3 and self.pos.x > 24 and self.pos.y > 19):
                         players[3].isGuilty += 1
                         if (players[3].isGuilty >= 3):
-                            img = pygame.image.load("img/UI/game_over/gameover_purple.png").convert_alpha()
+                            img = pygame.image.load("img/UI/game_over/gameover_orange.png").convert_alpha()
                             fenetre.fill((0, 0, 0))
                             fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
                             pygame.display.flip()
