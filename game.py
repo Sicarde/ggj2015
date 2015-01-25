@@ -539,7 +539,7 @@ while menu_c == 1:
 
 pygame.key.set_repeat(100, 10)
 k = pygame.key.get_pressed()
-spc_player = 0.25
+spc_player = 0.10
 startPol = time.time()
 isInspectorCreated = False
 loadPedro = pygame.image.load("img/UI/hud/pedro_load.png").convert_alpha()
