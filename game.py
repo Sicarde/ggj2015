@@ -554,7 +554,6 @@ while menu_c == 1:
         if position_new_rec.y == 370 and e[2] == 1:
             son2.play()
             while menu_c == 1:
-                time.sleep(3)
                 for event in pygame.event.get():
                     fenetre.blit(tuto_1, (0,0))
                     pygame.display.flip()
