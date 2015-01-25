@@ -331,7 +331,7 @@ class inspectorPedro():
                         self.onMangeDesChips = True
                         return
 
-taille = hauteur, largeur = 1920, 1080
+taille = hauteur, largeur = 1408, 960
 
 fenetre = pygame.display.set_mode(taille)
 
@@ -452,20 +452,19 @@ def getEvent(e, joy):
     ev = [0, 0, 0, 0]
     if (e.type == KEYUP):
         ev[3] = 1 
-    if (e.type == KEYDOWN):
-        k = pygame.key.get_pressed()
-        if k[K_DOWN]:
-            ev[0] = -1
-        if k[K_UP]:
-            ev[0] = 1
-        if k[K_LEFT]:
-            ev[1] = -1
-        if k[K_RIGHT]:
-            ev[1] = 1
-        if k[K_SPACE]:
-            ev[2] = 1
-        if k[K_ESCAPE]:
-            ev[2] = -1
+    k = pygame.key.get_pressed()
+    if k[K_DOWN]:
+        ev[0] = -1
+    if k[K_UP]:
+        ev[0] = 1
+    if k[K_LEFT]:
+        ev[1] = -1
+    if k[K_RIGHT]:
+        ev[1] = 1
+    if k[K_SPACE]:
+        ev[2] = 1
+    if k[K_ESCAPE]:
+        ev[2] = -1
     if (e.type == JOYHATMOTION):
         g = joysticks[joy].get_hat(0)
         ev[0] = g[1]
@@ -540,7 +539,7 @@ while menu_c == 1:
 
 pygame.key.set_repeat(100, 10)
 k = pygame.key.get_pressed()
-spc_player = 0.05
+spc_player = 0.25
 startPol = time.time()
 isInspectorCreated = False
 loadPedro = pygame.image.load("img/UI/hud/pedro_load.png").convert_alpha()
