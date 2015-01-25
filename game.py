@@ -263,6 +263,8 @@ new_rec = pygame.image.load("img/UI/menu/hand.png").convert_alpha()
 merci = pygame.image.load("img/UI/menu/credits.png").convert()
 son = pygame.mixer.Sound("audio/sounds/move_menu.wav")
 son2 = pygame.mixer.Sound("audio/sounds/select_menu.wav")
+sonpick = pygame.mixer.Sound("audio/sounds/pickup.wav")
+sondrop = pygame.mixer.Sound("audio/sounds/drop.wav")
 
 n = [Node(19.0, 2.0, [])]
 n.append(Node(19.0, 9.0, [n[0]]))
@@ -426,9 +428,11 @@ while continuer:
                     if (proof.pos.x - players[0].pos.x > -1 and proof.pos.x - players[0].pos.x < 1):
                         if (proof.pos.y - players[0].pos.y > -1 and proof.pos.y - players[0].pos.y < 1):
                             players[0].takeProof(proof)
+                            sonpick.play()
                             break
             else:
                 players[0].putProof()
+                sondrop.play()
         if (e[1] == -1):
             if (lala[int(players[0].pos.y)][int(players[0].pos.x - spc)] != 1 and lala[int(players[0].pos.y)][int(math.ceil(players[0].pos.x - spc))] != 1):
                 if (lala[int(math.ceil(players[0].pos.y))][int(players[0].pos.x - spc)] != 1 and lala[int(math.ceil(players[0].pos.y))][int(math.ceil(players[0].pos.x - spc))] != 1):
