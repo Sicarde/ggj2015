@@ -290,6 +290,7 @@ class inspectorPedro():
         for player in players:
             if (player.pos.x - self.pos.x > -2 and player.pos.y - self.pos.y > -2 and player.pos.x - self.pos.x < 2 and player.pos.y - self.pos.y < 2):
                 if (random.randint(1, 50) == 1):
+                    self.printBubble = 8
                     if (player.haveProof == True):
                         player.isGuilty += 1
                         whistle = pygame.mixer.Sound("audio/sounds/found.wav")
@@ -307,12 +308,16 @@ class inspectorPedro():
                             exit(0)
                         proofs.remove(player.proof)
                         player.haveProof = False
-                        return
+                    else:
+                        self.printBubble = 6
+                else:
+                    self.printBubble = 6
     def getNearestProof(self, proofs, players):
         for proof in proofs:
             if (proof.isPrinted == True and proof.isOnFloor == True):
                 if (proof.pos.x - self.pos.x > -2 and proof.pos.y - self.pos.y > -2 and proof.pos.x - self.pos.x < 2 and proof.pos.y - self.pos.y < 2):
                     if (self.pos.x < 15 and self.pos.y < 9):
+                        self.printBubble = 5
                         players[0].isGuilty += 1
                         if (players[0].isGuilty >= 3):
                             img = pygame.image.load("img/UI/game_over/gameover_red.png").convert_alpha()
