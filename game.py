@@ -206,6 +206,11 @@ class inspectorPedro():
                     if (self.pos.x < 15 and self.pos.y < 9):
                         players[0].isGuilty += 1
                         if (players[0].isGuilty >= 3):
+                            img = pygame.image.load("img/UI/game_over/gameover_red.png").convert_alpha()
+                            fenetre.fill((0, 0, 0))
+                            fenetre.blit(img, (0, 0), (0, 0, 1408, 960))
+                            pygame.display.flip()
+                            pygame.event.wait()
                             exit(0)
                         proofs.remove(proof)
                         return
