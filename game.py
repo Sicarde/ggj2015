@@ -485,6 +485,17 @@ def getEvent(e, joy):
             ev[2] = 1
         if k[K_ESCAPE]:
             ev[2] = -1
+    if (e.type == JOYAXISMOTION): # e1 == l/r
+        if (joysticks[joy].get_axis(0) < -0.1 or joysticks[joy].get_axis(0) > 0.1):
+            if (joysticks[joy].get_axis(1) < -0.1 or joysticks[joy].get_axis(1) > 0.1):
+                if joysticks[joy].get_axis(0) < 0 and joysticks[joy].get_axis(1) < 0:
+                    ev[0] = 1
+                if joysticks[joy].get_axis(0) > 0 and joysticks[joy].get_axis(1) > 0:
+                    ev[0] = -1
+                if joysticks[joy].get_axis(1) < 0 and joysticks[joy].get_axis(0) > 0:
+                    ev[1] = 1
+                if joysticks[joy].get_axis(1) > 0 and joysticks[joy].get_axis(0) < 0:
+                    ev[1] = -1
     if (e.type == JOYHATMOTION):
         if (e.joy == joy):
             g = joysticks[joy].get_hat(0)
@@ -551,7 +562,7 @@ while menu_c == 1:
 
 pygame.key.set_repeat(100, 10)
 k = pygame.key.get_pressed()
-spc_player = 0.25
+spc_player = 0.05
 startPol = time.time()
 isInspectorCreated = False
 loadPedro = pygame.image.load("img/UI/hud/pedro_load.png").convert_alpha()
