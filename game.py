@@ -485,23 +485,8 @@ def getEvent(e, joy):
         if (e.joy == joy or joy == -1):
             if (e.button == 0):
                 ev[2] = 1
-            if (e.button == 1):
-                ev[2] = -1
     if k[K_ESCAPE]:
         ev[2] = -1
-    #if (e.type == JOYAXISMOTION): # e1 == l/r
-    #    if (joysticks[joy].get_axis(0) < -0.1 or joysticks[joy].get_axis(0) > 0.1) or (joysticks[joy].get_axis(1) < -0.1 or joysticks[joy].get_axis(1) > 0.1):
-    #        if joysticks[joy].get_axis(0) < 0 and joysticks[joy].get_axis(1) < 0:
-    #            ev[0] = 1
-    #        if joysticks[joy].get_axis(0) > 0 and joysticks[joy].get_axis(1) > 0:
-    #            ev[0] = -1
-    #        if joysticks[joy].get_axis(1) < 0 and joysticks[joy].get_axis(0) > 0:
-    #            ev[1] = 1
-    #        if joysticks[joy].get_axis(1) > 0 and joysticks[joy].get_axis(0) < 0:
-    #            ev[1] = -1
-    #        print("ev")
-    #        print(ev[0])
-    #        print(ev[1])
     return ev
 
 speed = 2.5
