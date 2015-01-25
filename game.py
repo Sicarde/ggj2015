@@ -467,10 +467,9 @@ def getEvent(e, joy):
         if k[K_ESCAPE]:
             ev[2] = -1
     if (e.type == JOYHATMOTION):
-        if (e.joy == joy):
-            g = joysticks[joy].get_hat(0)
-            ev[0] = g[1]
-            ev[1] = g[0]
+        g = joysticks[joy].get_hat(0)
+        ev[0] = g[1]
+        ev[1] = g[0]
     if (e.type == JOYBUTTONDOWN):
         if (e.joy == joy or joy == -1):
             if (e.button == 0):
@@ -548,6 +547,7 @@ loadPedro = pygame.image.load("img/UI/hud/pedro_load.png").convert_alpha()
 e = [ [], [], [], [] ]
 while continuer:
     clock.tick(60)
+    pygame.event.post(pygame.event.Event(JOYHATMOTION, code='loop'))
     for event in pygame.event.get():
         for i in range(0, len(players), 1):
             e[i] = getEvent(event, i)
