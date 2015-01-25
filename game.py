@@ -55,7 +55,7 @@ class TestSprite(pygame.sprite.Sprite):
         tmp.set_colorkey(0)
         self.images.append(tmp)
         tmp = pygame.Surface((32, 32))
-        tmp.blit(plop, (0, 0), (32, 0, 32, 32))
+        tmp.blit(plop, (0, 0), (0, 32, 32, 32))
         tmp.set_colorkey(0)
         self.images.append(tmp)
         self.index = 0
@@ -200,45 +200,47 @@ class inspectorPedro():
         self.getNearestProof(proofs, players)
         self.draw(fenetre)
     def getNearestProof(self, proofs, players):
-            for proof in proofs:
-                if (proof.isPrinted == True and proof.isOnFloor == True):
-                    if (proof.pos.x - self.pos.x > -2 and proof.pos.y - self.pos.y > -2 and proof.pos.x - self.pos.x < 2 and proof.pos.y - self.pos.y < 2):
-                        if (self.pos.x < 15 and self.pos.y < 9):
-                            players[0].isGuilty += 1
-                            proofs.remove(proof)
-                            return
-                        elif (self.pos.x > 24 and self.pos.y < 9):
-                            players[1].isGuilty += 1
-                            proofs.remove(proof)
-                            return
-                        elif (self.pos.x < 15 and self.pos.y > 19):
-                            players[2].isGuilty += 1
-                            proofs.remove(proof)
-                            return
-                        elif (self.pos.x > 24 and self.pos.y > 19):
-                            players[3].isGuilty += 1
-                            proofs.remove(proof)
-                            return
-                        elif (proof.color == "red" and (self.onMangeDesChips == False)):
-                            clean(n)
-                            onVaMangerDesChips(n[15], 0)
-                            self.onMangeDesChips = True
-                            return
-                        elif (proof.color == "green" and (self.onMangeDesChips == False)):
-                            clean(n)
-                            onVaMangerDesChips(n[27], 0)
-                            self.onMangeDesChips = True
-                            return
-                        elif (proof.color == "orange" and (self.onMangeDesChips == False)):
-                            clean(n)
-                            onVaMangerDesChips(n[38], 0)
-                            self.onMangeDesChips = True
-                            return
-                        elif (proof.color == "purple" and (self.onMangeDesChips == False)):
-                            clean(n)
-                            onVaMangerDesChips(n[47], 0)
-                            self.onMangeDesChips = True
-                            return
+        for proof in proofs:
+            if (proof.isPrinted == True and proof.isOnFloor == True):
+                if (proof.pos.x - self.pos.x > -2 and proof.pos.y - self.pos.y > -2 and proof.pos.x - self.pos.x < 2 and proof.pos.y - self.pos.y < 2):
+                    if (self.pos.x < 15 and self.pos.y < 9):
+                        players[0].isGuilty += 1
+                        if (players[0].isGuilty >= 3):
+                            exit(0)
+                        proofs.remove(proof)
+                        return
+                    #elif (self.pos.x > 24 and self.pos.y < 9):
+                    #    players[1].isGuilty += 1
+                    #    proofs.remove(proof)
+                    #    return
+                    #elif (self.pos.x < 15 and self.pos.y > 19):
+                    #    players[2].isGuilty += 1
+                    #    proofs.remove(proof)
+                    #    return
+                    #elif (self.pos.x > 24 and self.pos.y > 19):
+                    #    players[3].isGuilty += 1
+                    #    proofs.remove(proof)
+                    #    return
+                    elif (proof.color == "red" and (self.onMangeDesChips == False)):
+                        clean(n)
+                        onVaMangerDesChips(n[15], 0)
+                        self.onMangeDesChips = True
+                        return
+                    elif (proof.color == "green" and (self.onMangeDesChips == False)):
+                        clean(n)
+                        onVaMangerDesChips(n[27], 0)
+                        self.onMangeDesChips = True
+                        return
+                    elif (proof.color == "orange" and (self.onMangeDesChips == False)):
+                        clean(n)
+                        onVaMangerDesChips(n[38], 0)
+                        self.onMangeDesChips = True
+                        return
+                    elif (proof.color == "purple" and (self.onMangeDesChips == False)):
+                        clean(n)
+                        onVaMangerDesChips(n[47], 0)
+                        self.onMangeDesChips = True
+                        return
     def goNearPlayer(self):
         if (not((self.checkingPlayer.pos.x - self.pos.x) > -1 and (self.checkingPlayer.pos.x - self.pos.x) < 1)):
             if (self.checkingPlayer.pos.x > self.pos.x):
@@ -277,6 +279,7 @@ proofsPaths = [ "img/Preuves/red_proof/red_cut_32.png", "img/Preuves/red_proof/r
 proofsTypes = [ "cut", "lighter", "rope", "spoon", "nes", "screwdriver" ]
 proofsTypesImage = [ pygame.image.load("img/UI/Preuves/cut_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/lighter_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/rope_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/spoon_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/nes_64.png").convert_alpha(), pygame.image.load("img/UI/Preuves/screwdriver_64.png").convert_alpha() ]
 proofsColors = [ "red", "green", "orange", "purple" ]
+cross = [ pygame.image.load("img/UI/hud/red_cross.png").convert_alpha(), pygame.image.load("img/UI/hud/green_cross.png").convert_alpha(), pygame.image.load("img/UI/hud/orange-cross.png").convert_alpha(), pygame.image.load("img/UI/hud/purple_cross.png").convert_alpha() ]
 proofs = []
 i = 0
 j = 0
@@ -412,7 +415,7 @@ clock = pygame.time.Clock()
 while menu_c == 1:
     clock.tick(60)
     for event in pygame.event.get():
-        e = getEvent(event, 0)    
+        e = getEvent(event, 0)
         if e[2] == -1:
             exit(0)
         if e[0] < 0:
@@ -501,6 +504,8 @@ while continuer:
             fenetre.blit(proof.image, Rect(proof.pos.x * 32, proof.pos.y * 32, 32, 32))
     for player in players:
         player.draw(fenetre)
+        for i in range(0, player.isGuilty, 1):
+            fenetre.blit(cross[proofsColors.index(player.color)], Rect(40 * 32 + 18 + 75, i * 27 + 19, 25, 25))
         if (player.haveProof == True):
             i = 0
             while (proofsTypes[i] != player.proof.t):
