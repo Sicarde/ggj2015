@@ -396,15 +396,16 @@ fenetre = pygame.display.set_mode(taille)
 
 continuer = 1
 
-if pygame.joystick.get_count() == 0:
-    print "Ce jeu necessite 2 a 4 manettes"
-    exit(0)
+
 
 pygame.joystick.init()
+
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 for joy in joysticks:
     joy.init()
-
+    if joy.get_numhats() <= 0:
+        print "Ce jeu necessite 2 a 4 manettes possedant une croix directionelle"
+        exit(0)
 players = []
 if (pygame.joystick.get_count() >= 1):
     players.append(Player("red", "img/Perso/red.png", 5, 1))
