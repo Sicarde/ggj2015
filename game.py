@@ -395,6 +395,11 @@ taille = hauteur, largeur = 1408, 960
 fenetre = pygame.display.set_mode(taille)
 
 continuer = 1
+
+if pygame.joystick.get_count() == 0:
+    print "Ce jeu necessite 2 a 4 manettes"
+    exit(0)
+
 pygame.joystick.init()
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 for joy in joysticks:
